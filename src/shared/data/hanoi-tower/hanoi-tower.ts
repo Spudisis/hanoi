@@ -16,7 +16,7 @@ class HanoiTower {
     makeAutoObservable(this, {}, { autoBind: true })
   }
   columns: (typeof MAX_COLUMNS)[number] = MAX_COLUMNS[0]
-  countLayers: (typeof MAX_LAYERS)[number] = MAX_LAYERS[5]
+  countLayers: (typeof MAX_LAYERS)[number] = MAX_LAYERS[7]
 
   rearrangementCount = 0
   private initTowerLayers: HanoiTowerLayer[] = []
