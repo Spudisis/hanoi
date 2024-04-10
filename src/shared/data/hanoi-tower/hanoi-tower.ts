@@ -1,7 +1,7 @@
 import { autorun, makeAutoObservable } from 'mobx'
 import { v4 as uuidv4 } from 'uuid'
 
-import { COLORS, MAX_COLUMNS, MAX_LAYERS } from './config'
+import { MAX_COLUMNS, MAX_LAYERS } from './config'
 
 export type HanoiTowerLayer = {
   id: string
@@ -14,6 +14,12 @@ export type HanoiTowerLayer = {
 const randomiseDistance = ({ min, max }: { min: number; max: number }) => {
   return Math.floor(Math.random() * (max - min) + min)
 }
+
+const randomiseColor = () => {
+  return `rgb(${randomiseDistance({ min: 0, max: 255 })},${randomiseDistance({ min: 0, max: 255 })},${randomiseDistance({ min: 0, max: 255 })})`
+}
+
+// TODO: add settings for color (randomise or color array)
 
 class HanoiTower {
   constructor() {
@@ -80,7 +86,7 @@ class HanoiTower {
       settings.positions = settings.positions.filter((elem) => elem !== position)
       layers.push({
         id: uuidv4(),
-        color: COLORS[i],
+        color: randomiseColor(),
         column: col,
         position: position,
         size: i
