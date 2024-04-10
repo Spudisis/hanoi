@@ -33,6 +33,13 @@ class HanoiTower {
     this.draggedLayoutSize = value
   }
 
+  firstLayoutInColumn(id: string, column: number) {
+    const sortedColumn = this.getLayersFromColumn({ column })
+    const isUpperLayout = sortedColumn[0].id === id
+
+    return isUpperLayout
+  }
+
   get draggedLayout() {
     return this.towerLayers.find((elem) => elem.id === this.#draggedLayoutId)
   }

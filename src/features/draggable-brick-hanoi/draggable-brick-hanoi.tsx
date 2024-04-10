@@ -1,6 +1,7 @@
 import { useRef } from 'react'
 
 import { useDraggable } from '@dnd-kit/core'
+import clsx from 'clsx'
 import { observer } from 'mobx-react-lite'
 
 import { HanoiTowerGame, HanoiTowerLayer } from '@/shared/data/hanoi-tower'
@@ -10,13 +11,16 @@ type DraggableBrickHanoiProps = {
   style?: {
     width: number
     height: number
+    cursor?: string
   } | null
 }
 
 const DraggableBrickHanoi = ({ layer, style }: DraggableBrickHanoiProps) => {
-  const { percentLayerWidth } = HanoiTowerGame
+  const { percentLayerWidth, firstLayoutInColumn } = HanoiTowerGame
 
   const brickRef = useRef<HTMLDivElement>(null)
+
+  const disabledBrick = !firstLayoutInColumn(layer.id, layer.column)
 
   const { attributes, listeners, setNodeRef } = useDraggable({
     id: layer.id,
@@ -25,12 +29,12 @@ const DraggableBrickHanoi = ({ layer, style }: DraggableBrickHanoiProps) => {
       type: 'drag-hanoi-brick',
       width: brickRef.current?.clientWidth,
       height: brickRef.current?.clientHeight
-    }
+    },
+    disabled: disabledBrick
   })
 
   return (
     <div
-      draggable
       style={{ width: 100 - layer.size * percentLayerWidth + '%', backgroundColor: layer.color, ...style }}
       ref={(el) => {
         //@ts-ignore
@@ -39,7 +43,7 @@ const DraggableBrickHanoi = ({ layer, style }: DraggableBrickHanoiProps) => {
       }}
       {...attributes}
       {...listeners}
-      className='h-6 bg-gray-500 rounded-xl'
+      className={clsx('h-7 bg-gray-500 rounded-xl', disabledBrick ? 'cursor-auto' : 'cursor-grab')}
     ></div>
   )
 }

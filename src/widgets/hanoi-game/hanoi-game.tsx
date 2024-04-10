@@ -51,13 +51,14 @@ export const HanoiGame = observer(() => {
 
   function handleDragEnd(event: DragEndEvent) {
     const { active, over } = event
-
+    //TODO: bug with color if drop item
     if (over && over.data.current && active.data.current) {
       changeColumnLayer({ column: over.data.current.index, idLayer: active.data.current.id })
     }
     changeDraggedLayoutId(null)
     changeDraggedLayoutSize(null)
   }
+
   function handleDragStart(event: DragStartEvent) {
     const { active } = event
 
