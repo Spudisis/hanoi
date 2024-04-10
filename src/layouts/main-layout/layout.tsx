@@ -1,9 +1,11 @@
 import { Outlet } from 'react-router-dom'
 
+import { Header } from './ui/header'
+
 export const MainLayout = () => {
   return (
     <div className='min-h-screen flex justify-between flex-col'>
-      <header className='border border-black'>header</header>
+      <Header />
       <main>
         <Outlet />
       </main>

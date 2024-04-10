@@ -11,7 +11,7 @@ export const router = createBrowserRouter([
     path: '/',
     element: <MainLayout />,
     children: [
-      { index: true, path: '/', element: <GamesList /> },
+      { index: true, path: PATHS.games, element: <GamesList /> },
       {
         path: PATHS.hanoiTower,
         element: <HanoiTower />
