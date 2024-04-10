@@ -9,7 +9,7 @@ const ActiveDragBrick = () => {
   if (!draggedLayout) {
     return null
   }
-  console.log(draggedLayoutSize?.width)
+
   return (
     <DraggableBrickHanoiObservered style={draggedLayoutSize ? { ...draggedLayoutSize, cursor: 'grabbing' } : null} layer={draggedLayout} />
   )

@@ -19,11 +19,7 @@ export const HanoiGame = observer(() => {
   return (
     <DndContext sensors={sensors} onDragEnd={handleDragEnd} onDragStart={handleDragStart}>
       {createPortal(
-        <DragOverlay
-          zIndex={4000}
-          style={{ width: 'auto', userSelect: 'none' }}
-          dropAnimation={{ duration: 400, easing: 'cubic-bezier(0.18, 0.67, 0.6, 1.22)' }}
-        >
+        <DragOverlay dropAnimation={{ duration: 300, easing: 'ease-in-out' }}>
           <ActiveDragBrickObservered />
         </DragOverlay>,
         document.body

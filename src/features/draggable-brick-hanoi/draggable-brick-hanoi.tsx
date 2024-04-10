@@ -1,4 +1,4 @@
-import { useRef } from 'react'
+import { CSSProperties, useRef } from 'react'
 
 import { useDraggable } from '@dnd-kit/core'
 import { CSS } from '@dnd-kit/utilities'
@@ -23,7 +23,7 @@ const DraggableBrickHanoi = ({ layer, style }: DraggableBrickHanoiProps) => {
 
   const disabledBrick = !firstLayoutInColumn(layer.id, layer.column)
 
-  const { attributes, listeners, setNodeRef } = useDraggable({
+  const { attributes, listeners, setNodeRef, isDragging, transform } = useDraggable({
     id: layer.id,
     data: {
       id: layer.id,
@@ -34,18 +34,21 @@ const DraggableBrickHanoi = ({ layer, style }: DraggableBrickHanoiProps) => {
     disabled: disabledBrick
   })
 
+  const styleT: CSSProperties = {
+    opacity: isDragging ? 0.4 : undefined,
+    transform: CSS.Translate.toString(transform)
+  }
+
   return (
-    <div
-      style={{ width: 100 - layer.size * percentLayerWidth + '%', backgroundColor: layer.color, ...style }}
-      ref={(el) => {
-        //@ts-ignore
-        brickRef.current = el
-        setNodeRef(el)
-      }}
-      {...attributes}
-      {...listeners}
-      className={clsx('h-7 rounded-xl shadow-brick', disabledBrick ? 'cursor-auto' : 'cursor-grab')}
-    ></div>
+    <div ref={setNodeRef} className='w-full h-7 flex justify-center' style={styleT}>
+      <div
+        style={{ width: 100 - layer.size * percentLayerWidth + '%', backgroundColor: layer.color, ...style }}
+        ref={brickRef}
+        {...attributes}
+        {...listeners}
+        className={clsx('h-7 rounded-xl shadow-brick', disabledBrick ? 'cursor-auto' : 'cursor-grab')}
+      ></div>
+    </div>
   )
 }
 
