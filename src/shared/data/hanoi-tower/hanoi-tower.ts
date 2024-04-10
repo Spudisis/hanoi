@@ -11,6 +11,10 @@ export type HanoiTowerLayer = {
   size: number
 }
 
+const randomiseDistance = ({ min, max }: { min: number; max: number }) => {
+  return Math.floor(Math.random() * (max - min) + min)
+}
+
 class HanoiTower {
   constructor() {
     makeAutoObservable(this, {}, { autoBind: true })
@@ -63,12 +67,22 @@ class HanoiTower {
   randomiseLayerTower() {
     const layers: HanoiTowerLayer[] = []
     // TODO: randomise
+    const settings = {
+      positions: Array(this.countLayers)
+        .fill(null)
+        .map((_, index) => index)
+    }
+
     for (let i = 0; i < this.countLayers; i++) {
+      const position = randomiseDistance({ min: 0, max: settings.positions.length - 1 })
+      const col = randomiseDistance({ min: 0, max: this.columns })
+
+      settings.positions = settings.positions.filter((elem) => elem !== position)
       layers.push({
         id: uuidv4(),
         color: COLORS[i],
-        column: 1,
-        position: i,
+        column: col,
+        position: position,
         size: i
       })
     }
