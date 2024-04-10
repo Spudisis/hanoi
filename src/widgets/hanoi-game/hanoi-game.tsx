@@ -1,7 +1,7 @@
 import { createPortal } from 'react-dom'
 
 import { StandHanoiObservered } from '@/entities/stand-hanoi'
-import { DndContext, DragEndEvent, DragOverlay, DragStartEvent, PointerSensor, useSensor, useSensors } from '@dnd-kit/core'
+import { DndContext, DragEndEvent, DragOverlay, DragStartEvent, KeyboardSensor, PointerSensor, useSensor, useSensors } from '@dnd-kit/core'
 import clsx from 'clsx'
 import { observer } from 'mobx-react-lite'
 
@@ -12,7 +12,7 @@ import { HanoiTowerGame } from '@/shared/data/hanoi-tower'
 import { ActiveDragBrickObservered } from './ui/active-drag-brick'
 
 export const HanoiGame = observer(() => {
-  const sensors = useSensors(useSensor(PointerSensor))
+  const sensors = useSensors(useSensor(PointerSensor), useSensor(KeyboardSensor))
 
   const { columns, getLayersFromColumn, changeColumnLayer, changeDraggedLayoutId, changeDraggedLayoutSize } = HanoiTowerGame
 

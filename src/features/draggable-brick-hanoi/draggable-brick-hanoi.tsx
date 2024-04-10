@@ -1,6 +1,7 @@
 import { useRef } from 'react'
 
 import { useDraggable } from '@dnd-kit/core'
+import { CSS } from '@dnd-kit/utilities'
 import clsx from 'clsx'
 import { observer } from 'mobx-react-lite'
 
@@ -43,7 +44,7 @@ const DraggableBrickHanoi = ({ layer, style }: DraggableBrickHanoiProps) => {
       }}
       {...attributes}
       {...listeners}
-      className={clsx('h-7 bg-gray-500 rounded-xl', disabledBrick ? 'cursor-auto' : 'cursor-grab')}
+      className={clsx('h-7 rounded-xl shadow-brick', disabledBrick ? 'cursor-auto' : 'cursor-grab')}
     ></div>
   )
 }
