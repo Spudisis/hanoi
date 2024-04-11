@@ -11,7 +11,7 @@ export const Range = (props: RangeProps) => {
           <span>{label}</span>
           {children}
         </div>
-        <input id='default-range' type='range' {...rest} className='w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer' />
+        <input type='range' {...rest} className='w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer' />
       </label>
     </>
   )

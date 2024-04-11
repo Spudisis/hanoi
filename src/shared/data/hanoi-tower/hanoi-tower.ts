@@ -1,4 +1,4 @@
-import { autorun, makeAutoObservable } from 'mobx'
+import { makeAutoObservable } from 'mobx'
 import { v4 as uuidv4 } from 'uuid'
 
 import { LAYERS_COUNT, MAX_COLUMNS } from './config'
@@ -13,6 +13,16 @@ export type HanoiTowerLayer = {
 
 const randomiseDistance = ({ min, max }: { min: number; max: number }) => {
   return Math.floor(Math.random() * (max - min) + min)
+}
+// 6
+const rainbowColor = (current: number, length: number) => {
+  // количество айтемов на каждую часть радуги
+
+  const frequency = 5 / length
+  const r = Math.floor(Math.sin(frequency * current + 0) * 127 + 128)
+  const g = Math.floor(Math.sin(frequency * current + 2) * 127 + 128)
+  const b = Math.floor(Math.sin(frequency * current + 4) * 127 + 128)
+  return `rgb(${r}, ${g}, ${b})`
 }
 
 const randomiseColor = () => {
@@ -41,6 +51,7 @@ class HanoiTower {
   statusSidebar: boolean = false
 
   babyMode: boolean = false
+  rainbowMode: boolean = false
 
   get brickHasBeenMoved() {
     return this.rearrangementCount !== 0
@@ -48,6 +59,10 @@ class HanoiTower {
 
   changeStatusBabyMode(status?: boolean) {
     this.babyMode = status || !this.babyMode
+  }
+
+  changeStatusRainbowMode(status?: boolean) {
+    this.rainbowMode = status || !this.rainbowMode
   }
 
   get heightStand() {
@@ -109,7 +124,7 @@ class HanoiTower {
       settings.positions = settings.positions.filter((elem) => elem !== position)
       layers.push({
         id: uuidv4(),
-        color: randomiseColor(),
+        color: this.rainbowMode ? rainbowColor(i, this.countLayers - 1) : randomiseColor(),
         column: col,
         position: position,
         size: i
@@ -174,7 +189,4 @@ class HanoiTower {
 }
 
 export const HanoiTowerGame = new HanoiTower()
-
-autorun(() => {
-  HanoiTowerGame.randomiseLayerTower()
-})
+HanoiTowerGame.randomiseLayerTower()
