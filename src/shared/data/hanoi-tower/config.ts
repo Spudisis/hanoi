@@ -1,5 +1,5 @@
 export const MAX_COLUMNS = [3, 4, 5] as const
-export const MAX_LAYERS = [4, 5, 6, 7, 8, 9, 10, 11] as const
+export const MAX_LAYERS = [4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 19, 20] as const
 
 export const COLORS = [
   '#E9172C',

@@ -7,3 +7,6 @@
         @apply bg-gray-200;
     } 
 }
+body{
+    overflow-x: hidden;
+}

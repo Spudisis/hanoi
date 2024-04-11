@@ -28,12 +28,31 @@ class HanoiTower {
   columns: (typeof MAX_COLUMNS)[number] = MAX_COLUMNS[0]
   countLayers: (typeof MAX_LAYERS)[number] = MAX_LAYERS[7]
 
+  columnsInit: (typeof MAX_COLUMNS)[number] = MAX_COLUMNS[0]
+  countLayersInit: (typeof MAX_LAYERS)[number] = MAX_LAYERS[7]
+
   rearrangementCount = 0
   private initTowerLayers: HanoiTowerLayer[] = []
   towerLayers: HanoiTowerLayer[] = []
 
   #draggedLayoutId: string | null = null
   draggedLayoutSize: { width: number; height: number } | null = null
+
+  statusSidebar: boolean = false
+
+  babyMode: boolean = false
+
+  get brickHasBeenMoved() {
+    return this.rearrangementCount !== 0
+  }
+
+  changeStatusBabyMode(status?: boolean) {
+    this.babyMode = status || !this.babyMode
+  }
+
+  changeStatusSidebar(status?: boolean) {
+    this.statusSidebar = status || !this.statusSidebar
+  }
 
   changeDraggedLayoutId(id: string | null) {
     this.#draggedLayoutId = id
@@ -96,15 +115,29 @@ class HanoiTower {
   }
 
   changeInitColumns({ column }: { column: (typeof MAX_COLUMNS)[number] }) {
-    this.columns = column
+    this.columnsInit = column
+    if (!this.brickHasBeenMoved) {
+      this.startNewGame()
+    }
   }
 
   changeInitLayers({ countLayers }: { countLayers: (typeof MAX_LAYERS)[number] }) {
-    this.countLayers = countLayers
+    this.countLayersInit = countLayers
+    if (!this.brickHasBeenMoved) {
+      this.startNewGame()
+    }
   }
 
   resetCurrentLayers() {
+    this.rearrangementCount = 0
     this.towerLayers = this.initTowerLayers
+  }
+
+  startNewGame() {
+    this.columns = this.columnsInit
+    this.countLayers = this.countLayersInit
+    this.randomiseLayerTower()
+    this.rearrangementCount = 0
   }
 
   changeColumnLayer({ column, idLayer }: { column: number; idLayer: string }) {
@@ -124,7 +157,7 @@ class HanoiTower {
     }
 
     this.towerLayers = this.towerLayers.map((elem) => (elem.id === idLayer ? { ...elem, column, position: pos } : elem))
-    this.rearrangementCount = this.rearrangementCount++
+    this.rearrangementCount = this.rearrangementCount + 1
   }
 }
 

@@ -6,11 +6,11 @@ export const MainLayout = () => {
   return (
     <div className='min-h-screen flex justify-between flex-col'>
       <Header />
-      <div className='w-full justify-center flex'>
-        <main className='max-w-container w-full'>
+      <main className='w-full h-full justify-center flex relative'>
+        <div className='max-w-container w-full'>
           <Outlet />
-        </main>
-      </div>
+        </div>
+      </main>
       <footer className='border border-black'>footer</footer>
     </div>
   )
