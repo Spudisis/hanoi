@@ -25,7 +25,7 @@ export const HanoiGame = observer(() => {
         document.body
       )}
       <div
-        className={clsx('grid gap-6', {
+        className={clsx('grid gap-6 justify-items-center', {
           'grid-cols-3': columns === 3,
           'grid-cols-4': columns === 4,
           'grid-cols-5': columns === 5
