@@ -50,6 +50,10 @@ class HanoiTower {
     this.babyMode = status || !this.babyMode
   }
 
+  get heightStand() {
+    return (this.countLayers + 1) * 1.75 + 'rem'
+  }
+
   changeStatusSidebar(status?: boolean) {
     this.statusSidebar = status || !this.statusSidebar
   }
@@ -74,7 +78,7 @@ class HanoiTower {
   }
 
   get percentLayerWidth() {
-    const min = 10
+    const min = 15
     const max = 100
     const percent = (max - min) / this.countLayers
     return percent

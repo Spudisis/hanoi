@@ -1,5 +1,4 @@
 import { ReactNode } from 'react'
-import { createPortal } from 'react-dom'
 
 import clsx from 'clsx'
 
@@ -11,16 +10,15 @@ type SidebarProps = {
 }
 
 export const Sidebar = ({ children, open }: SidebarProps) => {
-  return createPortal(
+  return (
     <div
       className={clsx(
-        'absolute right-0 top-0 min-w-56 z-20 min-h-screen border border-black transition-transform transform  ease-in-out duration-300 bg-slate-200',
+        'absolute right-0 top-0 min-w-56 z-20 h-full border-l-[1px] border-black transition-transform transform  ease-in-out duration-300 bg-white',
         !open ? 'translate-x-full' : ''
       )}
     >
-      <div className='p-4'>{children}</div>
-    </div>,
-    document.body
+      <div className='p-4 sticky top-0'>{children}</div>
+    </div>
   )
 }
 

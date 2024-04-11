@@ -14,7 +14,7 @@ import { ActiveDragBrickObservered } from './ui/active-drag-brick'
 export const HanoiGame = observer(() => {
   const sensors = useSensors(useSensor(PointerSensor), useSensor(KeyboardSensor))
 
-  const { columns, getLayersFromColumn, changeColumnLayer, changeDraggedLayoutId, changeDraggedLayoutSize } = HanoiTowerGame
+  const { columns, heightStand, getLayersFromColumn, changeColumnLayer, changeDraggedLayoutId, changeDraggedLayoutSize } = HanoiTowerGame
 
   return (
     <DndContext sensors={sensors} onDragEnd={handleDragEnd} onDragStart={handleDragStart}>
@@ -25,11 +25,12 @@ export const HanoiGame = observer(() => {
         document.body
       )}
       <div
-        className={clsx('grid gap-6 h-96', {
+        className={clsx('grid gap-6', {
           'grid-cols-3': columns === 3,
           'grid-cols-4': columns === 4,
           'grid-cols-5': columns === 5
         })}
+        style={{ height: heightStand }}
       >
         {Array(columns)
           .fill(null)

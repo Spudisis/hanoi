@@ -4,10 +4,10 @@ import { Header } from './ui/header'
 
 export const MainLayout = () => {
   return (
-    <div className='min-h-screen flex justify-between flex-col'>
+    <div className='min-h-screen flex flex-col justify-between'>
       <Header />
-      <main className='w-full h-full justify-center flex relative'>
-        <div className='max-w-container w-full'>
+      <main className='w-full h-full justify-center relative flex flex-1'>
+        <div className='max-w-container w-full flex items-center'>
           <Outlet />
         </div>
       </main>

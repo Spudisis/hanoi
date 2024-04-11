@@ -17,7 +17,7 @@ type DraggableBrickHanoiProps = {
 }
 
 const DraggableBrickHanoi = ({ layer, style }: DraggableBrickHanoiProps) => {
-  const { percentLayerWidth, firstLayoutInColumn } = HanoiTowerGame
+  const { percentLayerWidth, firstLayoutInColumn, babyMode } = HanoiTowerGame
 
   const brickRef = useRef<HTMLDivElement>(null)
 
@@ -46,8 +46,14 @@ const DraggableBrickHanoi = ({ layer, style }: DraggableBrickHanoiProps) => {
         ref={brickRef}
         {...attributes}
         {...listeners}
-        className={clsx('h-7 rounded-xl shadow-brick', disabledBrick ? 'cursor-auto' : 'cursor-grab')}
-      ></div>
+        className={clsx('h-7 rounded-xl shadow-brick flex justify-center', disabledBrick ? 'cursor-auto' : 'cursor-grab')}
+      >
+        {babyMode && (
+          <div className='bg-white rounded-lg px-1 my-1 border border-[rgba(0,0,0,0.5)]'>
+            <p className='font-semibold text-sm leading-[18px]'>{layer.size + 1}</p>
+          </div>
+        )}
+      </div>
     </div>
   )
 }
