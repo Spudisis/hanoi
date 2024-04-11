@@ -1,5 +1,10 @@
 export const MAX_COLUMNS = [3, 4, 5] as const
-export const MAX_LAYERS = [4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 19, 20] as const
+export const MAX_LAYERS = 100
+export const MIN_LAYERS = 5
+
+export const LAYERS_COUNT = Array.from({ length: MAX_LAYERS })
+  .map((_, index) => index)
+  .filter((elem) => elem > MIN_LAYERS - 1)
 
 export const COLORS = [
   '#E9172C',

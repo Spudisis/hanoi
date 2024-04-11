@@ -1,7 +1,7 @@
 import { autorun, makeAutoObservable } from 'mobx'
 import { v4 as uuidv4 } from 'uuid'
 
-import { MAX_COLUMNS, MAX_LAYERS } from './config'
+import { LAYERS_COUNT, MAX_COLUMNS } from './config'
 
 export type HanoiTowerLayer = {
   id: string
@@ -26,10 +26,10 @@ class HanoiTower {
     makeAutoObservable(this, {}, { autoBind: true })
   }
   columns: (typeof MAX_COLUMNS)[number] = MAX_COLUMNS[0]
-  countLayers: (typeof MAX_LAYERS)[number] = MAX_LAYERS[7]
+  countLayers: number = LAYERS_COUNT[7]
 
   columnsInit: (typeof MAX_COLUMNS)[number] = MAX_COLUMNS[0]
-  countLayersInit: (typeof MAX_LAYERS)[number] = MAX_LAYERS[7]
+  countLayersInit: number = LAYERS_COUNT[7]
 
   rearrangementCount = 0
   private initTowerLayers: HanoiTowerLayer[] = []
@@ -125,8 +125,16 @@ class HanoiTower {
     }
   }
 
-  changeInitLayers({ countLayers }: { countLayers: (typeof MAX_LAYERS)[number] }) {
-    this.countLayersInit = countLayers
+  changeInitLayers({ countLayers }: { countLayers: number | string }) {
+    if (isNaN(Number(countLayers))) {
+      return
+    }
+    const value = +countLayers
+    const numberExists = LAYERS_COUNT.find((elem) => elem === value)
+    if (!numberExists) {
+      return
+    }
+    this.countLayersInit = value
     if (!this.brickHasBeenMoved) {
       this.startNewGame()
     }
