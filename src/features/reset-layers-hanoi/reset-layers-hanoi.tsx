@@ -1,13 +1,15 @@
+import { Icon } from '@iconify/react'
 import { observer } from 'mobx-react-lite'
 
 import { HanoiTowerGame } from '@/shared/data/hanoi-tower'
+import { Button } from '@/shared/ui'
 
 const ResetLayersHanoi = () => {
   const { resetCurrentLayers, brickHasBeenMoved } = HanoiTowerGame
   return (
-    <button onClick={resetCurrentLayers} disabled={!brickHasBeenMoved}>
-      reset-layers-hanoi
-    </button>
+    <Button onClick={resetCurrentLayers} disabled={!brickHasBeenMoved}>
+      <Icon icon='material-symbols:refresh' /> Reset
+    </Button>
   )
 }
 

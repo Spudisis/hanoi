@@ -1,4 +1,5 @@
 import { SettingsHanoi } from '@/widgets/settings-hanoi'
+import { Icon } from '@iconify/react'
 import { observer } from 'mobx-react-lite'
 
 import { HanoiTowerGame } from '@/shared/data/hanoi-tower'
@@ -8,7 +9,9 @@ const SidebarHanoi = () => {
   const { statusSidebar } = HanoiTowerGame
   return (
     <Sidebar open={statusSidebar}>
-      <Sidebar.Header>Settings</Sidebar.Header>
+      <Sidebar.Header className='flex gap-2 items-center'>
+        <Icon icon='material-symbols:settings' /> Settings
+      </Sidebar.Header>
       <SettingsHanoi />
     </Sidebar>
   )
