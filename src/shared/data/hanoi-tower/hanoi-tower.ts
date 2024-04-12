@@ -36,7 +36,7 @@ class HanoiTower {
     makeAutoObservable(this, {}, { autoBind: true })
   }
 
-  gameMode: GameMode = 'Free'
+  gameMode: GameMode = 'Normal'
 
   columns: (typeof MAX_COLUMNS)[number] = MAX_COLUMNS[0]
   countLayers: number = LAYERS_COUNT[7]
@@ -207,6 +207,15 @@ class HanoiTower {
   }
 
   changeColumnLayer({ column, idLayer }: { column: number; idLayer: string }) {
+    if (this.gameMode === 'Free') {
+      this.changeColumnLayerFreeMode({ column, idLayer })
+    } else {
+      this.changeColumnLayerNormalMode({ column, idLayer })
+    }
+    this.detectWin()
+  }
+
+  changeColumnLayerFreeMode({ column, idLayer }: { column: number; idLayer: string }) {
     let pos = 0
 
     const initReduce = this.towerLayers.find((elem) => elem.column === column)?.position
@@ -224,6 +233,92 @@ class HanoiTower {
 
     this.towerLayers = this.towerLayers.map((elem) => (elem.id === idLayer ? { ...elem, column, position: pos } : elem))
     this.rearrangementCount = this.rearrangementCount + 1
+    return null
+  }
+
+  changeColumnLayerNormalMode({ column, idLayer }: { column: number; idLayer: string }) {
+    const columnLayers = this.towerLayers.filter((elem) => elem.column === column)
+    const maxPosition = columnLayers.reduce((prev, current) => (prev > current.position ? prev : current.position), -1)
+    const maxSize = columnLayers.reduce((prev, current) => (prev > current.size ? prev : current.size), -1)
+    const targetLayer = this.towerLayers.find((elem) => elem.id === idLayer)
+    if (!targetLayer) {
+      console.log('Not found layer')
+      return null
+    }
+    if (maxSize > targetLayer.size) {
+      console.log('Target layer bigger then bottom block')
+      return null
+    }
+    this.towerLayers = this.towerLayers.map((elem) => (elem.id === idLayer ? { ...elem, column, position: maxPosition + 1 } : elem))
+    this.rearrangementCount = this.rearrangementCount + 1
+    return null
+  }
+
+  detectWin() {
+    if (this.gameMode === 'Free') {
+      this.detectWinFreeMode()
+    } else {
+      this.detectWinNormalMode()
+    }
+  }
+
+  //FIXME: repeat code
+  detectWinNormalMode() {
+    const layers = this.towerLayers
+    let isFirstColumn = false
+    let isInOneColumn = true
+    let wrongPosition = false
+    const layersColumn = layers[0].column
+    let position = -1
+
+    for (let i = 0; i < layers.sort((b, a) => b.position - a.position).length; i++) {
+      if (layers[i].column === 0) {
+        isFirstColumn = true
+        break
+      }
+      if (layers[i].column !== layersColumn) {
+        isInOneColumn = false
+        break
+      }
+
+      if (layers[i].position !== position + 1) {
+        wrongPosition = true
+        break
+      } else {
+        position += 1
+      }
+    }
+    if (isFirstColumn || !isInOneColumn || wrongPosition) {
+      return
+    }
+    console.log('Win')
+  }
+
+  detectWinFreeMode() {
+    const layers = this.towerLayers
+
+    let isInOneColumn = true
+    let wrongPosition = false
+    const layersColumn = layers[0].column
+    let position = -1
+
+    for (let i = 0; i < layers.sort((b, a) => b.position - a.position).length; i++) {
+      if (layers[i].column !== layersColumn) {
+        isInOneColumn = false
+        break
+      }
+
+      if (layers[i].position !== position + 1) {
+        wrongPosition = true
+        break
+      } else {
+        position += 1
+      }
+    }
+    if (!isInOneColumn || wrongPosition) {
+      return
+    }
+    console.log('Win')
   }
 }
 

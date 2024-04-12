@@ -12,7 +12,11 @@ const RequiredMinRearrangement = () => {
   return (
     <p className='font-medium'>
       {requiredMinRearrangementBasedOnSettings}
-      {requiredMinRearrangementBasedOnSettings < 100000 ? ' perfect rearrangement to win' : ', are you serious?'}
+      {requiredMinRearrangementBasedOnSettings < 100000
+        ? ' perfect rearrangement to win'
+        : requiredMinRearrangementBasedOnSettings < 100000000
+          ? ', are you serious?'
+          : ', okay...'}
     </p>
   )
 }

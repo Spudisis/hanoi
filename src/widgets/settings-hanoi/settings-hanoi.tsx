@@ -13,7 +13,7 @@ import { RequiredMinRearrangementObservered } from './ui/required-min-rearrangem
 
 export const SettingsHanoi = () => {
   return (
-    <div className='flex flex-col gap-2'>
+    <div className='flex flex-col gap-3'>
       <>
         <ChangeGameModeHanoiObservered />
         <RequiredMinRearrangementObservered />
