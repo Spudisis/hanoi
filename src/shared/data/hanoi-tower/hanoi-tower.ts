@@ -79,6 +79,20 @@ class HanoiTower {
 
   changeStatusRainbowMode(status?: boolean) {
     this.rainbowMode = status || !this.rainbowMode
+    this.coloredBrickRainbow()
+  }
+
+  coloredBrickRainbow() {
+    if (this.rainbowMode) {
+      const layers = this.towerLayers
+
+      layers.sort((b, a) => b.size - a.size)
+      this.towerLayers = layers.map((elem, index) => {
+        return { ...elem, color: rainbowColor(index, layers.length) }
+      })
+    } else {
+      this.towerLayers = this.initTowerLayers
+    }
   }
 
   get heightStand() {
@@ -144,13 +158,16 @@ class HanoiTower {
     for (let i = 0; i < this.countLayers; i++) {
       layers.push({
         id: uuidv4(),
-        color: this.rainbowMode ? rainbowColor(i, this.countLayers - 1) : randomiseColor(),
+        color: randomiseColor(),
         column: 0,
         position: i,
         size: i
       })
     }
     this.#initTower(layers)
+    if (this.rainbowMode) {
+      this.coloredBrickRainbow()
+    }
   }
 
   randomiseLayerFreeGameMode() {
@@ -169,13 +186,17 @@ class HanoiTower {
       settings.positions = settings.positions.filter((elem) => elem !== position)
       layers.push({
         id: uuidv4(),
-        color: this.rainbowMode ? rainbowColor(i, this.countLayers - 1) : randomiseColor(),
+        color: randomiseColor(),
         column: col,
         position: position,
         size: i
       })
     }
     this.#initTower(layers)
+
+    if (this.rainbowMode) {
+      this.coloredBrickRainbow()
+    }
   }
 
   changeInitColumns({ column }: { column: (typeof MAX_COLUMNS)[number] }) {
