@@ -58,6 +58,9 @@ class HanoiTower {
 
   changeGameMode(gameMode: GameMode) {
     this.gameMode = gameMode
+    if (!this.brickHasBeenMoved) {
+      this.startNewGame()
+    }
   }
 
   get brickHasBeenMoved() {
