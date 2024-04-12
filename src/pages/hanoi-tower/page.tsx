@@ -1,5 +1,6 @@
 import { HanoiGame } from '@/widgets/hanoi-game'
 
+import { ModalWinGameObservered } from './ui/modal-win-game'
 import { SidebarHanoiObservered } from './ui/sidebar'
 
 export const HanoiTower = () => {
@@ -11,6 +12,7 @@ export const HanoiTower = () => {
       <div className='flex h-full'>
         <SidebarHanoiObservered />
       </div>
+      <ModalWinGameObservered />
     </div>
   )
 }

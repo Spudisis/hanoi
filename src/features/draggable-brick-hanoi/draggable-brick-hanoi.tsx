@@ -17,11 +17,13 @@ type DraggableBrickHanoiProps = {
 }
 
 const DraggableBrickHanoi = ({ layer, style }: DraggableBrickHanoiProps) => {
-  const { percentLayerWidth, firstLayoutInColumn, babyMode } = HanoiTowerGame
+  const { percentLayerWidth, firstLayoutInColumn, babyMode, isWin } = HanoiTowerGame
 
   const brickRef = useRef<HTMLDivElement>(null)
 
   const disabledBrick = !firstLayoutInColumn(layer.id, layer.column)
+
+  const disabled = disabledBrick || isWin
 
   const { attributes, listeners, setNodeRef, isDragging, transform } = useDraggable({
     id: layer.id,
@@ -31,7 +33,7 @@ const DraggableBrickHanoi = ({ layer, style }: DraggableBrickHanoiProps) => {
       width: brickRef.current?.clientWidth,
       height: brickRef.current?.clientHeight
     },
-    disabled: disabledBrick
+    disabled
   })
 
   const styleT: CSSProperties = {
@@ -46,7 +48,7 @@ const DraggableBrickHanoi = ({ layer, style }: DraggableBrickHanoiProps) => {
         ref={brickRef}
         {...attributes}
         {...listeners}
-        className={clsx('h-7 rounded-xl shadow-brick flex justify-center', disabledBrick ? 'cursor-auto' : 'cursor-grab')}
+        className={clsx('h-7 rounded-xl shadow-brick flex justify-center', disabled ? 'cursor-auto' : 'cursor-grab')}
       >
         {babyMode && (
           <div className='bg-white rounded-lg px-1 my-1 border border-[rgba(0,0,0,0.5)]'>

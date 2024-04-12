@@ -37,6 +37,8 @@ class HanoiTower {
   }
 
   gameMode: GameMode = 'Normal'
+  isWin: boolean = false
+  modalIsWin: boolean = false
 
   columns: (typeof MAX_COLUMNS)[number] = MAX_COLUMNS[0]
   countLayers: number = LAYERS_COUNT[7]
@@ -55,6 +57,10 @@ class HanoiTower {
 
   babyMode: boolean = false
   rainbowMode: boolean = false
+
+  closeModalWin() {
+    this.modalIsWin = false
+  }
 
   changeGameMode(gameMode: GameMode) {
     this.gameMode = gameMode
@@ -195,11 +201,15 @@ class HanoiTower {
   }
 
   resetCurrentLayers() {
+    this.isWin = false
+    this.modalIsWin = false
     this.rearrangementCount = 0
     this.towerLayers = this.initTowerLayers
   }
 
   startNewGame() {
+    this.isWin = false
+    this.modalIsWin = false
     this.columns = this.columnsInit
     this.countLayers = this.countLayersInit
     this.generateLayerTower()
@@ -274,10 +284,15 @@ class HanoiTower {
   }
 
   detectWin() {
+    let isWin = false
     if (this.gameMode === 'Free') {
-      this.detectWinFreeMode()
+      isWin = !!this.detectWinFreeMode()
     } else {
-      this.detectWinNormalMode()
+      isWin = !!this.detectWinNormalMode()
+    }
+    if (isWin) {
+      this.modalIsWin = true
+      this.isWin = true
     }
   }
 
@@ -310,7 +325,7 @@ class HanoiTower {
     if (isFirstColumn || !isInOneColumn || wrongPosition) {
       return
     }
-    console.log('Win')
+    return true
   }
 
   detectWinFreeMode() {
@@ -337,7 +352,7 @@ class HanoiTower {
     if (!isInOneColumn || wrongPosition) {
       return
     }
-    console.log('Win')
+    return true
   }
 }
 
