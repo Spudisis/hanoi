@@ -1,7 +1,7 @@
 import { makeAutoObservable } from 'mobx'
 import { v4 as uuidv4 } from 'uuid'
 
-import { LAYERS_COUNT, MAX_COLUMNS } from './config'
+import { GameMode, LAYERS_COUNT, MAX_COLUMNS } from './config'
 
 export type HanoiTowerLayer = {
   id: string
@@ -35,6 +35,9 @@ class HanoiTower {
   constructor() {
     makeAutoObservable(this, {}, { autoBind: true })
   }
+
+  gameMode: GameMode = 'Free'
+
   columns: (typeof MAX_COLUMNS)[number] = MAX_COLUMNS[0]
   countLayers: number = LAYERS_COUNT[7]
 
@@ -52,6 +55,10 @@ class HanoiTower {
 
   babyMode: boolean = false
   rainbowMode: boolean = false
+
+  changeGameMode(gameMode: GameMode) {
+    this.gameMode = gameMode
+  }
 
   get brickHasBeenMoved() {
     return this.rearrangementCount !== 0

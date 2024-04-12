@@ -19,3 +19,7 @@ export const COLORS = [
   '#DB80BA',
   '#84CDAD'
 ] as const
+
+export type GameMode = 'Normal' | 'Free'
+
+export const GAME_MODES: GameMode[] = ['Normal', 'Free']
