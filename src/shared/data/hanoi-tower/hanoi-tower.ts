@@ -215,10 +215,25 @@ class HanoiTower {
     this.detectWin()
   }
 
+  #breakLayerWithSameColumn({ column, idLayer }: { column: number; idLayer: string }) {
+    const targetLayer = this.towerLayers.find((elem) => elem.id === idLayer)
+    if (!targetLayer) {
+      return true
+    }
+    if (targetLayer.column === column) {
+      return true
+    }
+    return false
+  }
+
   changeColumnLayerFreeMode({ column, idLayer }: { column: number; idLayer: string }) {
     let pos = 0
 
     const initReduce = this.towerLayers.find((elem) => elem.column === column)?.position
+
+    if (this.#breakLayerWithSameColumn({ column, idLayer })) {
+      return
+    }
 
     if (typeof initReduce !== 'undefined') {
       const maxPositionInColumn = this.towerLayers.reduce(
@@ -241,9 +256,13 @@ class HanoiTower {
     const maxPosition = columnLayers.reduce((prev, current) => (prev > current.position ? prev : current.position), -1)
     const maxSize = columnLayers.reduce((prev, current) => (prev > current.size ? prev : current.size), -1)
     const targetLayer = this.towerLayers.find((elem) => elem.id === idLayer)
+
     if (!targetLayer) {
       console.log('Not found layer')
       return null
+    }
+    if (this.#breakLayerWithSameColumn({ column, idLayer })) {
+      return
     }
     if (maxSize > targetLayer.size) {
       console.log('Target layer bigger then bottom block')
