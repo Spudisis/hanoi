@@ -36,16 +36,21 @@ export const Select = <T,>({ label, options, onChange, value }: SelectProps<T>) 
 
   return (
     <div className='relative' ref={dropdown}>
-      <label className='flex flex-col'>
-        <span>{label}</span>
+      <label className='flex flex-col relative bg-white group'>
+        <span className='absolute -top-2.5 px-0.5 text-sm left-3 bg-inherit group-hover:bg-gray-50'>{label}</span>
         <button
-          className='p-2 transition rounded-lg border-black border flex justify-start bg-white hover:bg-gray-50'
+          className='p-3 transition rounded-lg border-gray-300 border flex justify-start bg-white group-hover:bg-gray-50'
           onClick={() => changeStatus(!status)}
         >
           {String(value)}
         </button>
       </label>
-      <div className={clsx('rounded-lg bg-white absolute w-full z-10 max-h-52 overflow-auto', status ? 'visible' : 'hidden')}>
+      <div
+        className={clsx(
+          'rounded-lg bg-white absolute border-gray-300 border w-full z-10 max-h-52 overflow-auto',
+          status ? 'visible' : 'hidden'
+        )}
+      >
         <ul className='flex flex-col p-1'>
           {options.map((elem, index) => (
             <li key={String(elem.value)}>

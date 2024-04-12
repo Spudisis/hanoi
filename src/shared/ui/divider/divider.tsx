@@ -1,3 +1,3 @@
 export const Divider = () => {
-  return <div className='h-px w-full bg-black'></div>
+  return <div className='h-px w-full bg-gray-300'></div>
 }
