@@ -7,7 +7,7 @@ import { Button } from '@/shared/ui'
 const StartNewGameHanoi = () => {
   const { startNewGame } = HanoiTowerGame
   return (
-    <Button onClick={startNewGame}>
+    <Button onClick={startNewGame} className='justify-center'>
       <Icon icon='ph:game-controller' /> Start
     </Button>
   )

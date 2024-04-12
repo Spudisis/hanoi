@@ -7,7 +7,7 @@ import { Button } from '@/shared/ui'
 const ResetLayersHanoi = () => {
   const { resetCurrentLayers, brickHasBeenMoved } = HanoiTowerGame
   return (
-    <Button onClick={resetCurrentLayers} disabled={!brickHasBeenMoved}>
+    <Button onClick={resetCurrentLayers} disabled={!brickHasBeenMoved} className='justify-center'>
       <Icon icon='material-symbols:refresh' /> Reset
     </Button>
   )
