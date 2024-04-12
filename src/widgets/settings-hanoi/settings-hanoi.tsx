@@ -17,7 +17,7 @@ export const SettingsHanoi = () => {
       <>
         <ChangeGameModeHanoiObservered />
         <RequiredMinRearrangementObservered />
-        <Divider />
+
         <CurrentRearrangementCountObservered />
       </>
       <Divider />
