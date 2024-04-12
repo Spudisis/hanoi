@@ -14,7 +14,7 @@ export const Sidebar = ({ children, open, className = '' }: SidebarProps) => {
   return (
     <div
       className={clsx(
-        'z-20 min-w-72 h-full border-l-[1px] border-black transition-transform transform  ease-in-out duration-300 bg-white',
+        'z-20 w-72 h-full border-l-[1px] border-black transition-transform transform  ease-in-out duration-300 bg-white',
         !open ? 'translate-x-full' : '',
         className
       )}

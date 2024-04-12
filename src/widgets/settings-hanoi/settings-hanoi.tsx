@@ -6,10 +6,21 @@ import { StartNewGameHanoiObservered } from '@/features/start-new-game-hanoi'
 import { ToggleBabyModeHanoiObservered } from '@/features/toggle-baby-mode-hanoi'
 import { ToggleRainbowModeHanoiObservered } from '@/features/toggle-rainbow-mode-hanoi'
 
+import { Divider } from '@/shared/ui'
+
+import { CurrentRearrangementCountObservered } from './ui/current-rearrangement-count'
+import { RequiredMinRearrangementObservered } from './ui/required-min-rearrangement'
+
 export const SettingsHanoi = () => {
   return (
     <div className='flex flex-col gap-2'>
-      <ChangeGameModeHanoiObservered />
+      <>
+        <ChangeGameModeHanoiObservered />
+        <RequiredMinRearrangementObservered />
+        <Divider />
+        <CurrentRearrangementCountObservered />
+      </>
+      <Divider />
       <ChangeCountLayersHanoiObservered />
       <ChangeCountCoolumnsHanoiObservered />
       <ToggleBabyModeHanoiObservered />

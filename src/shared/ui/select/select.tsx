@@ -51,7 +51,7 @@ export const Select = <T,>({ label, options, onChange, value }: SelectProps<T>) 
           status ? 'visible' : 'hidden'
         )}
       >
-        <ul className='flex flex-col p-1'>
+        <ul className='flex flex-col p-1 gap-0.5'>
           {options.map((elem, index) => (
             <li key={String(elem.value)}>
               <button

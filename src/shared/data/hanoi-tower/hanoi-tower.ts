@@ -95,6 +95,13 @@ class HanoiTower {
     return isUpperLayout
   }
 
+  get requiredMinRearrangementBasedOnSettings() {
+    if (this.columns > 3) {
+      return null
+    }
+    return Math.pow(2, this.countLayers) - 1
+  }
+
   get draggedLayout() {
     return this.towerLayers.find((elem) => elem.id === this.#draggedLayoutId)
   }
@@ -115,7 +122,29 @@ class HanoiTower {
     return this.towerLayers.filter((elem) => elem.column === column).sort((b, a) => a.position - b.position)
   }
 
-  randomiseLayerTower() {
+  generateLayerTower() {
+    if (this.gameMode === 'Free') {
+      this.randomiseLayerFreeGameMode()
+    } else {
+      this.generateLayerNormalGameMode()
+    }
+  }
+
+  generateLayerNormalGameMode() {
+    const layers: HanoiTowerLayer[] = []
+    for (let i = 0; i < this.countLayers; i++) {
+      layers.push({
+        id: uuidv4(),
+        color: this.rainbowMode ? rainbowColor(i, this.countLayers - 1) : randomiseColor(),
+        column: 0,
+        position: i,
+        size: i
+      })
+    }
+    this.#initTower(layers)
+  }
+
+  randomiseLayerFreeGameMode() {
     const layers: HanoiTowerLayer[] = []
     // TODO: randomise
     const settings = {
@@ -170,7 +199,7 @@ class HanoiTower {
   startNewGame() {
     this.columns = this.columnsInit
     this.countLayers = this.countLayersInit
-    this.randomiseLayerTower()
+    this.generateLayerTower()
     this.rearrangementCount = 0
   }
 
@@ -196,4 +225,4 @@ class HanoiTower {
 }
 
 export const HanoiTowerGame = new HanoiTower()
-HanoiTowerGame.randomiseLayerTower()
+HanoiTowerGame.generateLayerTower()
