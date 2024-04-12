@@ -1,6 +1,6 @@
 export const MAX_COLUMNS = [3, 4, 5] as const
 export const MAX_LAYERS = 100
-export const MIN_LAYERS = 5
+export const MIN_LAYERS = 4
 
 export const LAYERS_COUNT = Array.from({ length: MAX_LAYERS })
   .map((_, index) => index)
