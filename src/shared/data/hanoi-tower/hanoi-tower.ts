@@ -172,7 +172,6 @@ class HanoiTower {
 
   randomiseLayerFreeGameMode() {
     const layers: HanoiTowerLayer[] = []
-    // TODO: randomise
     const settings = {
       positions: Array(this.countLayers)
         .fill(null)
