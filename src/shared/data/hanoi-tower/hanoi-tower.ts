@@ -173,13 +173,12 @@ class HanoiTower {
 
   coloredBrickRainbow() {
     const layers = this.towerLayers
+    layers.sort((b, a) => b.size - a.size)
     if (this.rainbowMode) {
-      layers.sort((b, a) => b.size - a.size)
       this.towerLayers = layers.map((elem, index) => {
         return { ...elem, color: rainbowColor(index, layers.length) }
       })
     } else {
-      layers.sort((b, a) => b.size - a.size)
       this.towerLayers = layers.map((elem) => {
         return { ...elem, color: this.initTowerLayers.find((initElem) => initElem.id === elem.id)?.color || elem.color }
       })
@@ -204,18 +203,15 @@ class HanoiTower {
 
   firstLayoutInColumn(id: string, column: number) {
     const sortedColumn = this.getLayersFromColumn({ column })
-    if (!sortedColumn.length) {
-      return
-    }
-    const isUpperLayout = sortedColumn[0].id === id
 
+    if (!sortedColumn.length) return null
+
+    const isUpperLayout = sortedColumn[0].id === id
     return isUpperLayout
   }
 
   get requiredMinRearrangementBasedOnSettings() {
-    if (this.columns > 3) {
-      return null
-    }
+    if (this.columns > 3) return null
     return Math.pow(2, this.countLayers) - 1
   }
 
@@ -302,11 +298,13 @@ class HanoiTower {
 
   changeInitLayers({ countLayers }: { countLayers: number | string }) {
     if (isNaN(Number(countLayers))) {
+      console.warn('changeInitLayers NaN count layers')
       return
     }
     const value = +countLayers
     const numberExists = LAYERS_COUNT.find((elem) => elem === value)
     if (!numberExists) {
+      console.warn('changeInitLayers numberExists not found')
       return
     }
     this.countLayersInit = value
@@ -365,7 +363,7 @@ class HanoiTower {
     const initReduce = this.towerLayers.find((elem) => elem.column === column)?.position
 
     if (this.#breakLayerWithSameColumn({ column, idLayer })) {
-      return
+      return null
     }
 
     if (typeof initReduce !== 'undefined') {
