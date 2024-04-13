@@ -61,6 +61,12 @@ class HanoiTower {
   babyMode: boolean = false
   rainbowMode: boolean = false
 
+  isAnimatedBricksStatus = true
+
+  changeIsAnimatedBricksStatus(status: boolean) {
+    this.isAnimatedBricksStatus = status
+  }
+
   goPrevStep() {
     const layerBack = this.historyTowerLayers.find((elem) => elem.step === this.step - 1)
     if (layerBack) {

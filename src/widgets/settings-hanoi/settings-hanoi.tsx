@@ -4,6 +4,7 @@ import { ChangeGameModeHanoiObservered } from '@/features/change-game-mode-hanoi
 // import { HistoryStepsHanoiObservered } from '@/features/history-steps-hanoi'
 import { ResetLayersHanoiObservered } from '@/features/reset-layers-hanoi'
 import { StartNewGameHanoiObservered } from '@/features/start-new-game-hanoi'
+import { ToggleAnimationHanoiObservered } from '@/features/toggle-animation-hanoi'
 import { ToggleBabyModeHanoiObservered } from '@/features/toggle-baby-mode-hanoi'
 import { ToggleRainbowModeHanoiObservered } from '@/features/toggle-rainbow-mode-hanoi'
 
@@ -26,6 +27,7 @@ export const SettingsHanoi = () => {
       <ChangeCountCoolumnsHanoiObservered />
       <ToggleBabyModeHanoiObservered />
       <ToggleRainbowModeHanoiObservered />
+      <ToggleAnimationHanoiObservered />
       <div className='grid grid-cols-2 gap-2'>
         <ResetLayersHanoiObservered />
         <StartNewGameHanoiObservered />

@@ -14,12 +14,20 @@ import { ActiveDragBrickObservered } from './ui/active-drag-brick'
 export const HanoiGame = observer(() => {
   const sensors = useSensors(useSensor(PointerSensor), useSensor(KeyboardSensor))
 
-  const { columns, heightStand, getLayersFromColumn, changeColumnLayer, changeDraggedLayoutId, changeDraggedLayoutSize } = HanoiTowerGame
+  const {
+    columns,
+    heightStand,
+    isAnimatedBricksStatus,
+    getLayersFromColumn,
+    changeColumnLayer,
+    changeDraggedLayoutId,
+    changeDraggedLayoutSize
+  } = HanoiTowerGame
 
   return (
     <DndContext sensors={sensors} onDragEnd={handleDragEnd} onDragStart={handleDragStart}>
       {createPortal(
-        <DragOverlay dropAnimation={{ duration: 300, easing: 'ease-in-out' }} zIndex={30}>
+        <DragOverlay dropAnimation={isAnimatedBricksStatus ? { duration: 300, easing: 'ease-in-out' } : null} zIndex={30}>
           <ActiveDragBrickObservered />
         </DragOverlay>,
         document.body
