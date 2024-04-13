@@ -339,8 +339,7 @@ class HanoiTower {
 
     this.towerLayers = this.towerLayers.map((elem) => (elem.id === idLayer ? { ...elem, column, position: pos } : elem))
     this.rearrangementCount = this.rearrangementCount + 1
-    this.step = this.step + 1
-    this.currentStep = this.step
+
     this.changeHistoryAfterChangeColumnLayer()
     return null
   }
