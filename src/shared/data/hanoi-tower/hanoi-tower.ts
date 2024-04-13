@@ -1,4 +1,4 @@
-import { makeAutoObservable } from 'mobx'
+import { makeAutoObservable, reaction } from 'mobx'
 import { v4 as uuidv4 } from 'uuid'
 
 import { GameMode, LAYERS_COUNT, MAX_COLUMNS } from './config'
@@ -63,6 +63,43 @@ class HanoiTower {
   rainbowMode: boolean = false
 
   isAnimatedBricksStatus = true
+
+  holdDownMouse: NodeJS.Timeout | null = null
+  holdDownMouseCbTimer: NodeJS.Timeout | null = null
+
+  holdDownPrevStep() {
+    this.holdDownMouse = setTimeout(() => {
+      this.holdDownMouseCbTimer = setInterval(() => {
+        this.goPrevStep()
+      }, 100)
+    }, 500)
+  }
+
+  holdCancelDownPrevStep() {
+    if (this.holdDownMouse) {
+      clearTimeout(this.holdDownMouse)
+    }
+    if (this.holdDownMouseCbTimer) {
+      clearInterval(this.holdDownMouseCbTimer)
+    }
+  }
+
+  holdDownNextStep() {
+    this.holdDownMouse = setTimeout(() => {
+      this.holdDownMouseCbTimer = setInterval(() => {
+        this.goNextStep()
+      }, 100)
+    }, 500)
+  }
+
+  holdCancelDownNextStep() {
+    if (this.holdDownMouse) {
+      clearTimeout(this.holdDownMouse)
+    }
+    if (this.holdDownMouseCbTimer) {
+      clearInterval(this.holdDownMouseCbTimer)
+    }
+  }
 
   changeIsAnimatedBricksStatus(status: boolean) {
     this.isAnimatedBricksStatus = status
@@ -446,3 +483,22 @@ class HanoiTower {
 
 export const HanoiTowerGame = new HanoiTower()
 HanoiTowerGame.generateLayerTower()
+
+// the button may become disabled, so mouseup cancel function does not work, detect it here
+reaction(
+  () => HanoiTowerGame.isLastStep,
+  (isLastStep) => {
+    if (isLastStep) {
+      HanoiTowerGame.holdCancelDownNextStep()
+    }
+  }
+)
+
+reaction(
+  () => HanoiTowerGame.isFirstStep,
+  (isFirstStep) => {
+    if (isFirstStep) {
+      HanoiTowerGame.holdCancelDownPrevStep()
+    }
+  }
+)
