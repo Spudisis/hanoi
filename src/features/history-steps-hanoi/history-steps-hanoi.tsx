@@ -5,13 +5,15 @@ import { HanoiTowerGame } from '@/shared/data/hanoi-tower'
 import { Button } from '@/shared/ui'
 
 const HistoryStepsHanoi = () => {
-  const { isLastStep, isFirstStep, goPrevStep, goNextStep } = HanoiTowerGame
+  const { isLastStep, isFirstStep, goPrevStep, goNextStep, step, currentStep } = HanoiTowerGame
   return (
     <div className='flex flex-row justify-between items-center'>
       <Button disabled={isFirstStep} onClick={goPrevStep}>
         <Icon icon='material-symbols:play-arrow' className='rotate-180' />
       </Button>
-      <div>Steps</div>
+      <div>
+        {currentStep}/{step}
+      </div>
       <Button disabled={isLastStep} onClick={goNextStep}>
         <Icon icon='material-symbols:play-arrow' />
       </Button>

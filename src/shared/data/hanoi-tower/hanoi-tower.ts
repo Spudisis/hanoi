@@ -52,6 +52,7 @@ class HanoiTower {
   historyTowerLayers: { step: number; layers: HanoiTowerLayer[] }[] = []
 
   step: number = 0
+  currentStep: number = 0
 
   #draggedLayoutId: string | null = null
   draggedLayoutSize: { width: number; height: number } | null = null
@@ -68,25 +69,42 @@ class HanoiTower {
   }
 
   goPrevStep() {
-    const layerBack = this.historyTowerLayers.find((elem) => elem.step === this.step - 1)
+    const layerBack = this.historyTowerLayers.find((elem) => elem.step === this.currentStep - 1)
     if (layerBack) {
       this.towerLayers = layerBack.layers
+      this.currentStep = this.currentStep - 1
     }
   }
 
   goNextStep() {
-    const layerNext = this.historyTowerLayers.find((elem) => elem.step === this.step + 1)
+    const layerNext = this.historyTowerLayers.find((elem) => elem.step === this.currentStep + 1)
     if (layerNext) {
       this.towerLayers = layerNext.layers
+      this.currentStep = this.currentStep + 1
     }
   }
 
   get isLastStep() {
-    return this.step === this.rearrangementCount
+    return this.currentStep === this.step
   }
 
   get isFirstStep() {
-    return this.step === 0
+    return this.currentStep === 0
+  }
+
+  changeHistoryAfterChangeColumnLayer() {
+    const oldCurrentStep = this.currentStep
+    const layers = this.towerLayers
+    if (oldCurrentStep !== this.step) {
+      const historyTowerLayersToOldCurrentStep = this.historyTowerLayers.filter((elem) => elem.step <= oldCurrentStep)
+      historyTowerLayersToOldCurrentStep.push({ step: oldCurrentStep + 1, layers })
+
+      this.historyTowerLayers = historyTowerLayersToOldCurrentStep
+    } else {
+      this.historyTowerLayers.push({ step: oldCurrentStep + 1, layers })
+    }
+    this.currentStep = oldCurrentStep + 1
+    this.step = oldCurrentStep + 1
   }
 
   closeModalWin() {
@@ -264,6 +282,7 @@ class HanoiTower {
     this.towerLayers = this.initTowerLayers
     this.historyTowerLayers = [{ step: 0, layers: this.initTowerLayers }]
     this.step = 0
+    this.currentStep = 0
   }
 
   startNewGame() {
@@ -272,6 +291,7 @@ class HanoiTower {
     this.columns = this.columnsInit
     this.countLayers = this.countLayersInit
     this.step = 0
+    this.currentStep = 0
     this.historyTowerLayers = [{ step: 0, layers: [] }]
     this.generateLayerTower()
     this.rearrangementCount = 0
@@ -320,7 +340,8 @@ class HanoiTower {
     this.towerLayers = this.towerLayers.map((elem) => (elem.id === idLayer ? { ...elem, column, position: pos } : elem))
     this.rearrangementCount = this.rearrangementCount + 1
     this.step = this.step + 1
-    this.historyTowerLayers.push({ step: this.step, layers: this.towerLayers })
+    this.currentStep = this.step
+    this.changeHistoryAfterChangeColumnLayer()
     return null
   }
 
@@ -343,8 +364,7 @@ class HanoiTower {
     }
     this.towerLayers = this.towerLayers.map((elem) => (elem.id === idLayer ? { ...elem, column, position: maxPosition + 1 } : elem))
     this.rearrangementCount = this.rearrangementCount + 1
-    this.step = this.step + 1
-    this.historyTowerLayers.push({ step: this.step, layers: this.towerLayers })
+    this.changeHistoryAfterChangeColumnLayer()
     return null
   }
 

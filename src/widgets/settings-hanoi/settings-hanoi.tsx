@@ -1,7 +1,7 @@
 import { ChangeCountCoolumnsHanoiObservered } from '@/features/change-count-columns-hanoi'
 import { ChangeCountLayersHanoiObservered } from '@/features/change-count-layers-hanoi'
 import { ChangeGameModeHanoiObservered } from '@/features/change-game-mode-hanoi'
-// import { HistoryStepsHanoiObservered } from '@/features/history-steps-hanoi'
+import { HistoryStepsHanoiObservered } from '@/features/history-steps-hanoi'
 import { ResetLayersHanoiObservered } from '@/features/reset-layers-hanoi'
 import { StartNewGameHanoiObservered } from '@/features/start-new-game-hanoi'
 import { ToggleAnimationHanoiObservered } from '@/features/toggle-animation-hanoi'
@@ -33,7 +33,7 @@ export const SettingsHanoi = () => {
         <StartNewGameHanoiObservered />
       </div>
       <Divider />
-      {/* <HistoryStepsHanoiObservered /> */}
+      <HistoryStepsHanoiObservered />
     </div>
   )
 }
