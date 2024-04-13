@@ -1,7 +1,7 @@
 import { makeAutoObservable, reaction } from 'mobx'
 import { v4 as uuidv4 } from 'uuid'
 
-import { GameMode, LAYERS_COUNT, MAX_COLUMNS } from './config'
+import { ANIMATION_STATUS_NAME_LC, BABY_MODE_NAME_LC, GameMode, LAYERS_COUNT, MAX_COLUMNS, RAINBOW_MODE_NAME_LC } from './config'
 
 export type HanoiTowerLayer = {
   id: string
@@ -60,7 +60,7 @@ class HanoiTower {
   statusSidebar: boolean = false
 
   babyMode: boolean = false
-  rainbowMode: boolean = false
+  rainbowMode: boolean = true
 
   isAnimatedBricksStatus = true
 
@@ -103,6 +103,7 @@ class HanoiTower {
 
   changeIsAnimatedBricksStatus(status: boolean) {
     this.isAnimatedBricksStatus = status
+    localStorage.setItem(ANIMATION_STATUS_NAME_LC, JSON.stringify(this.isAnimatedBricksStatus))
   }
 
   goPrevStep() {
@@ -160,11 +161,13 @@ class HanoiTower {
   }
 
   changeStatusBabyMode(status?: boolean) {
-    this.babyMode = status || !this.babyMode
+    this.babyMode = status ?? !this.babyMode
+    localStorage.setItem(BABY_MODE_NAME_LC, JSON.stringify(this.babyMode))
   }
 
   changeStatusRainbowMode(status?: boolean) {
-    this.rainbowMode = status || !this.rainbowMode
+    this.rainbowMode = status ?? !this.rainbowMode
+    localStorage.setItem(RAINBOW_MODE_NAME_LC, JSON.stringify(this.rainbowMode))
     this.coloredBrickRainbow()
   }
 
@@ -483,6 +486,36 @@ class HanoiTower {
 
 export const HanoiTowerGame = new HanoiTower()
 HanoiTowerGame.generateLayerTower()
+
+const rainbowModeFromLocalStorage = localStorage.getItem(RAINBOW_MODE_NAME_LC)
+
+if (rainbowModeFromLocalStorage) {
+  const parsedMode = JSON.parse(rainbowModeFromLocalStorage)
+  if (typeof parsedMode === 'boolean') {
+    const mode = parsedMode as boolean
+
+    HanoiTowerGame.changeStatusRainbowMode(mode)
+  }
+}
+
+const animationStatusFromLocalStorage = localStorage.getItem(ANIMATION_STATUS_NAME_LC)
+
+if (animationStatusFromLocalStorage) {
+  const parsedMode = JSON.parse(animationStatusFromLocalStorage)
+  if (typeof parsedMode === 'boolean') {
+    const mode = parsedMode as boolean
+    HanoiTowerGame.changeIsAnimatedBricksStatus(mode)
+  }
+}
+
+const babyModeFromLocalStorage = localStorage.getItem(BABY_MODE_NAME_LC)
+if (babyModeFromLocalStorage) {
+  const parsedMode = JSON.parse(babyModeFromLocalStorage)
+  if (typeof parsedMode === 'boolean') {
+    const mode = parsedMode as boolean
+    HanoiTowerGame.changeStatusBabyMode(mode)
+  }
+}
 
 // the button may become disabled, so mouseup cancel function does not work, detect it here
 reaction(

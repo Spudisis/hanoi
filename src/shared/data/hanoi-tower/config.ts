@@ -23,3 +23,7 @@ export const COLORS = [
 export type GameMode = 'Normal' | 'Free'
 
 export const GAME_MODES: GameMode[] = ['Normal', 'Free']
+
+export const RAINBOW_MODE_NAME_LC = 'rainbow-mode'
+export const ANIMATION_STATUS_NAME_LC = 'animation-status'
+export const BABY_MODE_NAME_LC = 'baby-mode'
