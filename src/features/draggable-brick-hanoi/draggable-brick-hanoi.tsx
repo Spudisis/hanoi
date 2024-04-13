@@ -42,7 +42,7 @@ const DraggableBrickHanoi = ({ layer, style }: DraggableBrickHanoiProps) => {
   }
 
   return (
-    <div ref={setNodeRef} className='w-full h-7 flex justify-center' style={styleT}>
+    <div ref={setNodeRef} data-hanoi='brick-hanoi' id={layer.id} className='w-full h-7 flex justify-center' style={styleT}>
       <div
         style={{ width: 100 - layer.size * percentLayerWidth + '%', backgroundColor: layer.color, ...style }}
         ref={brickRef}
