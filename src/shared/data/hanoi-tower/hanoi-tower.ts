@@ -368,9 +368,10 @@ class HanoiTower {
     let isInOneColumn = true
     let wrongPosition = false
     const layersColumn = layers[0].column
-    let position = -1
+    const sortedLayers = [...layers].sort((b, a) => b.position - a.position)
+    let position = sortedLayers[0].position - 1
 
-    for (let i = 0; i < layers.sort((b, a) => b.position - a.position).length; i++) {
+    for (let i = 0; i < sortedLayers.length; i++) {
       if (layers[i].column === 0) {
         isFirstColumn = true
         break
@@ -399,15 +400,18 @@ class HanoiTower {
     let isInOneColumn = true
     let wrongPosition = false
     const layersColumn = layers[0].column
-    let position = -1
+    const sortedLayers = [...layers].sort((b, a) => b.position - a.position)
+    let position = sortedLayers[0].position - 1
 
-    for (let i = 0; i < layers.sort((b, a) => b.position - a.position).length; i++) {
+    for (let i = 0; i < sortedLayers.length; i++) {
       if (layers[i].column !== layersColumn) {
         isInOneColumn = false
+        console.log('Not win, another col')
         break
       }
 
       if (layers[i].position !== position + 1) {
+        console.log('Not win, wrong pos')
         wrongPosition = true
         break
       } else {
