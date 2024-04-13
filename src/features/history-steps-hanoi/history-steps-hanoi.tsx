@@ -1,3 +1,4 @@
+import { Icon } from '@iconify/react/dist/iconify.js'
 import { observer } from 'mobx-react-lite'
 
 import { HanoiTowerGame } from '@/shared/data/hanoi-tower'
@@ -8,11 +9,11 @@ const HistoryStepsHanoi = () => {
   return (
     <div className='flex flex-row justify-between items-center'>
       <Button disabled={isFirstStep} onClick={goPrevStep}>
-        back
+        <Icon icon='material-symbols:play-arrow' className='rotate-180' />
       </Button>
-      <div>count</div>
+      <div>Steps</div>
       <Button disabled={isLastStep} onClick={goNextStep}>
-        next
+        <Icon icon='material-symbols:play-arrow' />
       </Button>
     </div>
   )
