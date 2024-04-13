@@ -320,9 +320,11 @@ class HanoiTower {
     this.modalIsWin = false
     this.rearrangementCount = 0
     this.towerLayers = this.initTowerLayers
+
     this.historyTowerLayers = [{ step: 0, layers: this.initTowerLayers }]
     this.step = 0
     this.currentStep = 0
+    this.coloredBrickRainbow()
   }
 
   startNewGame() {
