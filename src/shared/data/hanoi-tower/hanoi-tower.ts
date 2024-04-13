@@ -49,6 +49,9 @@ class HanoiTower {
   rearrangementCount = 0
   private initTowerLayers: HanoiTowerLayer[] = []
   towerLayers: HanoiTowerLayer[] = []
+  historyTowerLayers: { step: number; layers: HanoiTowerLayer[] }[] = []
+
+  step: number = 0
 
   #draggedLayoutId: string | null = null
   draggedLayoutSize: { width: number; height: number } | null = null
@@ -57,6 +60,28 @@ class HanoiTower {
 
   babyMode: boolean = false
   rainbowMode: boolean = false
+
+  goPrevStep() {
+    const layerBack = this.historyTowerLayers.find((elem) => elem.step === this.step - 1)
+    if (layerBack) {
+      this.towerLayers = layerBack.layers
+    }
+  }
+
+  goNextStep() {
+    const layerNext = this.historyTowerLayers.find((elem) => elem.step === this.step + 1)
+    if (layerNext) {
+      this.towerLayers = layerNext.layers
+    }
+  }
+
+  get isLastStep() {
+    return this.step === this.rearrangementCount
+  }
+
+  get isFirstStep() {
+    return this.step === 0
+  }
 
   closeModalWin() {
     this.modalIsWin = false
@@ -83,15 +108,17 @@ class HanoiTower {
   }
 
   coloredBrickRainbow() {
+    const layers = this.towerLayers
     if (this.rainbowMode) {
-      const layers = this.towerLayers
-
       layers.sort((b, a) => b.size - a.size)
       this.towerLayers = layers.map((elem, index) => {
         return { ...elem, color: rainbowColor(index, layers.length) }
       })
     } else {
-      this.towerLayers = this.initTowerLayers
+      layers.sort((b, a) => b.size - a.size)
+      this.towerLayers = layers.map((elem) => {
+        return { ...elem, color: this.initTowerLayers.find((initElem) => initElem.id === elem.id)?.color || elem.color }
+      })
     }
   }
 
@@ -113,6 +140,9 @@ class HanoiTower {
 
   firstLayoutInColumn(id: string, column: number) {
     const sortedColumn = this.getLayersFromColumn({ column })
+    if (!sortedColumn.length) {
+      return
+    }
     const isUpperLayout = sortedColumn[0].id === id
 
     return isUpperLayout
@@ -139,6 +169,7 @@ class HanoiTower {
   #initTower(layers: HanoiTowerLayer[]) {
     this.initTowerLayers = layers
     this.towerLayers = layers
+    this.historyTowerLayers = [{ layers, step: 0 }]
   }
 
   getLayersFromColumn({ column }: { column: number }) {
@@ -225,6 +256,8 @@ class HanoiTower {
     this.modalIsWin = false
     this.rearrangementCount = 0
     this.towerLayers = this.initTowerLayers
+    this.historyTowerLayers = [{ step: 0, layers: this.initTowerLayers }]
+    this.step = 0
   }
 
   startNewGame() {
@@ -232,6 +265,8 @@ class HanoiTower {
     this.modalIsWin = false
     this.columns = this.columnsInit
     this.countLayers = this.countLayersInit
+    this.step = 0
+    this.historyTowerLayers = [{ step: 0, layers: [] }]
     this.generateLayerTower()
     this.rearrangementCount = 0
   }
@@ -278,6 +313,8 @@ class HanoiTower {
 
     this.towerLayers = this.towerLayers.map((elem) => (elem.id === idLayer ? { ...elem, column, position: pos } : elem))
     this.rearrangementCount = this.rearrangementCount + 1
+    this.step = this.step + 1
+    this.historyTowerLayers.push({ step: this.step, layers: this.towerLayers })
     return null
   }
 
@@ -300,6 +337,8 @@ class HanoiTower {
     }
     this.towerLayers = this.towerLayers.map((elem) => (elem.id === idLayer ? { ...elem, column, position: maxPosition + 1 } : elem))
     this.rearrangementCount = this.rearrangementCount + 1
+    this.step = this.step + 1
+    this.historyTowerLayers.push({ step: this.step, layers: this.towerLayers })
     return null
   }
 
