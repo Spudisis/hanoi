@@ -1,7 +1,11 @@
 import { makeAutoObservable, reaction } from 'mobx'
 import { v4 as uuidv4 } from 'uuid'
 
-import { ANIMATION_STATUS_NAME_LC, BABY_MODE_NAME_LC, GameMode, LAYERS_COUNT, MAX_COLUMNS, RAINBOW_MODE_NAME_LC } from './config'
+import { GameMode, LAYERS_COUNT, MAX_COLUMNS } from './config'
+
+const RAINBOW_MODE_NAME_LC = 'rainbow-mode'
+const ANIMATION_STATUS_NAME_LC = 'animation-status'
+const BABY_MODE_NAME_LC = 'baby-mode'
 
 export type HanoiTowerLayer = {
   id: string
