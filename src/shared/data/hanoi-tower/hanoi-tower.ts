@@ -1,3 +1,4 @@
+import { WeightedGraph } from '@/dijkstra'
 import { makeAutoObservable, reaction } from 'mobx'
 import { v4 as uuidv4 } from 'uuid'
 
@@ -342,6 +343,7 @@ class HanoiTower {
   }
 
   changeColumnLayer({ column, idLayer }: { column: number; idLayer: string }) {
+    console.log(column)
     if (this.gameMode === 'Free') {
       this.changeColumnLayerFreeMode({ column, idLayer })
     } else {
@@ -402,7 +404,8 @@ class HanoiTower {
       return
     }
     if (maxSize > targetLayer.size) {
-      console.log('Target layer bigger then bottom block')
+      console.log('Target layer bigger then bottom block', targetLayer)
+
       return null
     }
     this.towerLayers = this.towerLayers.map((elem) => (elem.id === idLayer ? { ...elem, column, position: maxPosition + 1 } : elem))
@@ -485,6 +488,154 @@ class HanoiTower {
       return
     }
     return true
+  }
+
+  handleAutoPlay() {
+    const Layers = this.towerLayers.sort((b, a) => b.size - a.size).map((elem) => ({ column: elem.column, size: elem.size }))
+    type fractalT = { layers: typeof Layers; variants: fractalT[] }
+    console.log(Layers)
+
+    const currentLayerPath = Layers.reduce((acc, elem) => acc + elem.column, '')
+
+    let fractalPaths: { path: string; connect: string[] }[] = [
+      {
+        path: currentLayerPath,
+        connect: []
+      }
+    ]
+
+    const fractal: fractalT = {
+      layers: Layers,
+      variants: []
+    }
+    const findVariants = (layers: typeof Layers) => {
+      const res: fractalT[] = []
+
+      // если нет состояния в путях, то добавляем
+      const path = layers.reduce((acc, elem) => acc + elem.column, '')
+      const targetLayer = fractalPaths.find((elem) => elem.path === path)
+      if (!targetLayer) {
+        fractalPaths.push({ path, connect: [] })
+      }
+
+      for (let i = 0; i < this.countLayers; i++) {
+        for (let j = 0; j < this.countLayers; j++) {
+          if (j === i) continue
+          if (
+            !(
+              (layers[i].size > layers[j].size || 0 === i) &&
+              !layers.find((elem) => layers[i].column === elem.column && elem.size > layers[i].size)
+            )
+          ) {
+            continue
+          }
+
+          for (let k = 0; k < this.columns; k++) {
+            // если выше айтема лежит что-то в той же колонке
+            if (layers.find((elem) => elem.size > layers[i].size && elem.column === k)) {
+              continue
+            }
+            const size = layers[i].size
+            const col = k
+
+            const layersNew = layers.map((elem) => (elem.size === size ? { size: elem.size, column: col } : elem))
+            const newPathConnect = layersNew.reduce((acc, elem) => acc + elem.column, '')
+
+            if (newPathConnect === path) {
+              continue
+            }
+
+            let skip = false
+            // делаем новые пути фрактала
+            const newFractalPaths = fractalPaths.map((elem) => {
+              if (elem.path === path) {
+                // если новый путь уже есть в текущем, то будет скипать
+                if (elem.connect.includes(newPathConnect)) {
+                  skip = true
+                  return elem
+                } else {
+                  //иначе добавляем и в следующий раз скипаем
+                  elem.connect.push(newPathConnect)
+                  return elem
+                }
+              } else {
+                return elem
+              }
+            })
+            fractalPaths = newFractalPaths
+
+            if (skip) {
+              continue
+            }
+
+            res.push({
+              layers: layersNew,
+              variants: []
+            })
+          }
+        }
+      }
+
+      if (!res) {
+        return []
+      }
+      const newRes = res.map((elem): fractalT => {
+        const variants = findVariants(elem.layers)
+        return { ...elem, variants }
+      })
+      return newRes
+    }
+    fractal.variants = findVariants(Layers)
+
+    const dejkstra = new WeightedGraph()
+
+    fractalPaths.forEach((elem) => {
+      dejkstra.addVertex(elem.path)
+    })
+
+    fractalPaths.forEach((elem) => {
+      elem.connect.forEach((path) => {
+        dejkstra.addEdge(elem.path, path, 1)
+      })
+    })
+
+    console.log(fractalPaths)
+
+    const paths = dejkstra.Dijkstra(currentLayerPath, '2222222') as string[]
+
+    let prev: { size: number; column: number }[] = []
+    paths.forEach((elem, index) => {
+      const normalize = elem.split('').map((elem, index) => ({ size: index, column: +elem }))
+      if (index === 0) {
+        prev = normalize
+        return
+      }
+
+      let newColumn: number | null = null
+      let sizeChangebleLayer: number | null = null
+      normalize.forEach((elem) => {
+        const sameSizePrev = prev.find((prevElem) => prevElem.size === elem.size)
+        if (sameSizePrev && sameSizePrev.column === elem.column) {
+          return
+        } else {
+          newColumn = elem.column
+          sizeChangebleLayer = +elem.size
+        }
+      })
+
+      prev = normalize
+      if (typeof sizeChangebleLayer !== 'number') {
+        return
+      }
+
+      const targerLayer = this.towerLayers.find((elem) => elem.size === sizeChangebleLayer)
+
+      if (!targerLayer) {
+        return
+      }
+
+      setTimeout(() => this.changeColumnLayer({ column: newColumn || 0, idLayer: targerLayer?.id }), index * 200)
+    })
   }
 }
 

@@ -5,150 +5,143 @@ import './index.css'
 
 import { App } from '@/app/app'
 
-const countLayers = 3
-const countColumn = 3
+// import { WeightedGraph } from './dijkstra'
 
-const Layers = [
-  { size: 1, column: 1 },
-  { size: 2, column: 1 },
-  { size: 3, column: 1 }
-]
+// const countLayers = 4
+// const countColumn = 3
 
-type fractalT = { layers: typeof Layers; prevLayers: (typeof Layers)[]; variants: fractalT[]; reject: boolean; isWin?: boolean }
+// const Layers = [
+//   { size: 1, column: 3 },
+//   { size: 2, column: 1 },
+//   { size: 3, column: 3 },
+//   { size: 4, column: 2 }
+// ].sort((b, a) => b.size - a.size)
 
-// const fractalPaths: { path: { [key: string]: number }; connect: (typeof Layers)[] }[] = [
+// type fractalT = { layers: typeof Layers; variants: fractalT[] }
+
+// const currentLayerPath = Layers.reduce((acc, elem) => acc + elem.column, '')
+
+// let fractalPaths: { path: string; connect: string[] }[] = [
 //   {
-//     path: Layers.reduce((acc, elem) => acc + elem, ''),
+//     path: currentLayerPath,
 //     connect: []
 //   }
 // ]
 
-const fractal: fractalT = {
-  prevLayers: [Layers],
-  layers: Layers,
-  variants: [],
-  reject: false
-}
+// const fractal: fractalT = {
+//   layers: Layers,
+//   variants: []
+// }
 
-const findVariants = (layers: typeof Layers, prevLayers: (typeof Layers)[]) => {
-  const res: fractalT[] = []
+// const findVariants = (layers: typeof Layers) => {
+//   const res: fractalT[] = []
 
-  for (let i = 0; i < countLayers; i++) {
-    for (let j = 0; j < countLayers; j++) {
-      if (j === i) continue
-      if (
-        !(
-          (layers[i].size > layers[j].size || 0 === i) &&
-          !layers.find((elem) => layers[i].column === elem.column && elem.size > layers[i].size)
-        )
-      ) {
-        continue
-      }
+//   // если нет состояния в путях, то добавляем
+//   const path = layers.reduce((acc, elem) => acc + elem.column, '')
+//   const targetLayer = fractalPaths.find((elem) => elem.path === path)
+//   if (!targetLayer) {
+//     fractalPaths.push({ path, connect: [] })
+//   }
 
-      for (let k = 1; k < countColumn + 1; k++) {
-        if (layers.find((elem) => elem.size > layers[i].size && elem.column === k)) {
-          continue
-        }
-        const size = layers[i].size
-        const col = k
-        const l = layers.map((elem) => (elem.size === size ? { size: elem.size, column: col } : elem))
-        let countTr = 0
-        for (let i = 0; i < layers.length; i++) {
-          if (layers[i].column === l[i].column) {
-            countTr++
-          }
-        }
+//   for (let i = 0; i < countLayers; i++) {
+//     for (let j = 0; j < countLayers; j++) {
+//       if (j === i) continue
+//       if (
+//         !(
+//           (layers[i].size > layers[j].size || 0 === i) &&
+//           !layers.find((elem) => layers[i].column === elem.column && elem.size > layers[i].size)
+//         )
+//       ) {
+//         continue
+//       }
 
-        if (countTr === layers.length) {
-          continue
-        }
+//       for (let k = 1; k < countColumn + 1; k++) {
+//         // если выше айтема лежит что-то в той же колонке
+//         if (layers.find((elem) => elem.size > layers[i].size && elem.column === k)) {
+//           continue
+//         }
+//         const size = layers[i].size
+//         const col = k
 
-        const rs = res.filter((fractal) => {
-          const lay = fractal.layers
-          let countTr = 0
-          for (let i = 0; i < layers.length; i++) {
-            if (lay[i].column === l[i].column) {
-              countTr++
-            }
-          }
-          if (countTr === layers.length) {
-            return null
-          }
-          return fractal
-        })
-        if (rs.length !== res.length) {
-          continue
-        }
-        const searchPrevLayer = prevLayers.filter((fractal) => {
-          const lay = fractal
-          let countTr = 0
-          for (let i = 0; i < layers.length; i++) {
-            if (lay[i].column === l[i].column) {
-              countTr++
-            }
-          }
-          if (countTr === layers.length) {
-            return null
-          }
-          return fractal
-        })
-        if (searchPrevLayer.length !== prevLayers.length) {
-          continue
-        }
-        const layersNew = layers.map((elem) => (elem.size === size ? { size: elem.size, column: col } : elem))
-        let isWin = false
-        let countChecked = 1
-        const defColumn = layersNew[0].column
-        for (let i = 1; i < layersNew.length; i++) {
-          if (layersNew[i].column === defColumn) {
-            countChecked += 1
-            continue
-          } else {
-            isWin = false
-            break
-          }
-        }
-        if (countChecked === layersNew.length) {
-          isWin = true
-        }
+//         // start: детектим победу
+//         const layersNew = layers.map((elem) => (elem.size === size ? { size: elem.size, column: col } : elem))
+//         const newPathConnect = layersNew.reduce((acc, elem) => acc + elem.column, '')
 
-        res.push({
-          layers: layers.map((elem) => (elem.size === size ? { size: elem.size, column: col } : elem)),
-          variants: [],
-          reject: false,
-          prevLayers: [...prevLayers, layers],
-          isWin
-        })
-      }
-    }
-  }
+//         if (newPathConnect === path) {
+//           continue
+//         }
 
-  if (!res) {
-    return []
-  }
-  const newRes = res.map((elem): fractalT => {
-    if (elem.reject) return elem
-    const variants = findVariants(elem.layers, [...prevLayers, layers])
-    return { ...elem, variants }
-  })
-  return newRes
-}
+//         let skip = false
+//         // делаем новые пути фрактала
+//         const newFractalPaths = fractalPaths.map((elem) => {
+//           if (elem.path === path) {
+//             // если новый путь уже есть в текущем, то будет скипать
 
-fractal.variants = findVariants(Layers, [])
-// console.log(fractal)
+//             if (elem.connect.includes(newPathConnect)) {
+//               skip = true
+//               return elem
+//             } else {
+//               //иначе добавляем и в следующий раз скипаем
+//               elem.connect.push(newPathConnect)
+//               return elem
+//             }
+//           } else {
+//             return elem
+//           }
+//         })
+//         fractalPaths = newFractalPaths
 
-type OutputReturn = { n: string; z: OutputReturn[]; isWin: boolean }
+//         if (skip) {
+//           continue
+//         }
 
-const output = (fractal: fractalT): OutputReturn => {
-  return {
-    n: fractal.layers.reduce((acc, current) => acc + current.column, ''),
-    z: fractal.variants.map((elem) => output(elem)),
-    isWin: !!fractal.isWin
-  }
-}
+//         res.push({
+//           layers: layersNew,
+//           variants: []
+//         })
+//       }
+//     }
+//   }
 
-const clgUser = output(fractal)
-console.log(JSON.stringify(clgUser))
+//   if (!res) {
+//     return []
+//   }
+//   const newRes = res.map((elem): fractalT => {
+//     const variants = findVariants(elem.layers)
+//     return { ...elem, variants }
+//   })
+//   return newRes
+// }
+
+// fractal.variants = findVariants(Layers)
+
+// type OutputReturn = { n: string; z: OutputReturn[] }
+
+// const output = (fractal: fractalT): OutputReturn => {
+//   return {
+//     n: fractal.layers.reduce((acc, current) => acc + current.column, ''),
+//     z: fractal.variants.map((elem) => output(elem))
+//   }
+// }
+
+// const clgUser = output(fractal)
+
+// const dejkstra = new WeightedGraph()
+
+// fractalPaths.forEach((elem) => {
+//   dejkstra.addVertex(elem.path)
+// })
+
+// fractalPaths.forEach((elem) => {
+//   elem.connect.forEach((path) => {
+//     dejkstra.addEdge(elem.path, path, 1)
+//   })
+// })
+
+// console.log(fractalPaths)
+
+// console.log(dejkstra.Dijkstra(currentLayerPath, '2222'))
+
 // // Функция для поиска объекта с заданным статусом isWin: true
 // function findWinningObjectWithPath(obj, path = []) {
 //   // Проверяем, является ли текущий объект объектом

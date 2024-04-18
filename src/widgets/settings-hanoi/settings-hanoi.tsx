@@ -1,3 +1,4 @@
+import { AutoPlayHanoiObservable } from '@/features/auto-play-hanoi'
 import { ChangeCountCoolumnsHanoiObservered } from '@/features/change-count-columns-hanoi'
 import { ChangeCountLayersHanoiObservered } from '@/features/change-count-layers-hanoi'
 import { ChangeGameModeHanoiObservered } from '@/features/change-game-mode-hanoi'
@@ -34,6 +35,7 @@ export const SettingsHanoi = () => {
       </div>
       <Divider />
       <HistoryStepsHanoiObservered />
+      <AutoPlayHanoiObservable />
     </div>
   )
 }
