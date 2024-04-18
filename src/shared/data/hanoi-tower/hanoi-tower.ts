@@ -497,6 +497,8 @@ class HanoiTower {
 
     const fractalPaths: { [key: string]: string[] } = {}
     const start = new Date()
+
+    const maxConnectForPath = this.columns + (this.columns - MAX_COLUMNS[0]) * 2
     console.log('start')
     const findVariants = (initLayers: typeof Layers) => {
       const stack: (typeof Layers)[] = [initLayers]
@@ -510,55 +512,51 @@ class HanoiTower {
         const targetLayer = fractalPaths[path]
         if (!targetLayer) {
           fractalPaths[path] = []
+        } else if (targetLayer.length === maxConnectForPath) {
+          continue
         }
-        // if (fractalPaths[path].length === this.columns) {
-        //   continue
-        // }
 
         for (let i = 0; i < this.countLayers; i++) {
-          for (let j = 0; j < this.countLayers; j++) {
-            if (j === i) continue
-            if (
-              !(
-                (layers[i].size > layers[j].size || 0 === i) &&
-                !layers.find((elem) => layers[i].column === elem.column && elem.size > layers[i].size)
-              )
-            ) {
+          // если выше айтема что-то лежит
+          const colCancel = layers.find((elem) => layers[i].column === elem.column && elem.size > layers[i].size)
+          if (colCancel) {
+            continue
+          }
+
+          for (let k = 0; k < this.columns; k++) {
+            if (layers[i].column === k) {
+              continue
+            }
+            // если в колонке лежит меньшее кольцо
+            if (layers.find((elem) => elem.size > layers[i].size && elem.column === k)) {
+              continue
+            }
+            const size = layers[i].size
+            const col = k
+
+            // типо переставили в другую колонку и узнать путь
+            const layersNew = layers.map((elem) => (elem.size === size ? { size: elem.size, column: col } : elem))
+            const newPathConnect = layersNew.reduce((acc, elem) => acc + elem.column, '')
+
+            if (newPathConnect === path) {
               continue
             }
 
-            for (let k = 0; k < this.columns; k++) {
-              // если выше айтема лежит что-то в той же колонке
-              if (layers.find((elem) => elem.size > layers[i].size && elem.column === k)) {
-                continue
-              }
-              const size = layers[i].size
-              const col = k
+            let skip = false
+            // делаем новые пути фрактала
+            const targetFractalPath = fractalPaths[path]
 
-              const layersNew = layers.map((elem) => (elem.size === size ? { size: elem.size, column: col } : elem))
-              const newPathConnect = layersNew.reduce((acc, elem) => acc + elem.column, '')
-
-              if (newPathConnect === path) {
-                continue
-              }
-
-              let skip = false
-              // делаем новые пути фрактала
-              const targetFractalPath = fractalPaths[path]
-              if (targetFractalPath) {
-                if (targetFractalPath.includes(newPathConnect)) {
-                  skip = true
-                } else {
-                  fractalPaths[path] = fractalPaths[path].concat([newPathConnect])
-                }
-              }
-
-              if (skip) {
-                continue
-              }
-
-              stack.push(layersNew)
+            if (targetFractalPath.includes(newPathConnect)) {
+              skip = true
+            } else {
+              fractalPaths[path] = fractalPaths[path].concat([newPathConnect])
             }
+
+            if (skip) {
+              continue
+            }
+
+            stack.push(layersNew)
           }
         }
       }
