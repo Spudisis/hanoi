@@ -343,7 +343,6 @@ class HanoiTower {
   }
 
   changeColumnLayer({ column, idLayer }: { column: number; idLayer: string }) {
-    console.log(column)
     if (this.gameMode === 'Free') {
       this.changeColumnLayerFreeMode({ column, idLayer })
     } else {
@@ -492,117 +491,120 @@ class HanoiTower {
 
   handleAutoPlay() {
     const Layers = this.towerLayers.sort((b, a) => b.size - a.size).map((elem) => ({ column: elem.column, size: elem.size }))
-    type fractalT = { layers: typeof Layers; variants: fractalT[] }
-    console.log(Layers)
+    console.log(JSON.stringify(Layers))
 
     const currentLayerPath = Layers.reduce((acc, elem) => acc + elem.column, '')
 
-    let fractalPaths: { path: string; connect: string[] }[] = [
-      {
-        path: currentLayerPath,
-        connect: []
-      }
-    ]
+    const fractalPaths: { [key: string]: string[] } = {}
+    const start = new Date()
+    console.log('start')
+    const findVariants = (initLayers: typeof Layers) => {
+      const stack: (typeof Layers)[] = [initLayers]
 
-    const fractal: fractalT = {
-      layers: Layers,
-      variants: []
-    }
-    const findVariants = (layers: typeof Layers) => {
-      const res: fractalT[] = []
+      while (stack.length > 0) {
+        const layers = stack.pop()
+        if (!layers) {
+          continue
+        }
+        const path = layers.reduce((acc, elem) => acc + elem.column, '')
+        const targetLayer = fractalPaths[path]
+        if (!targetLayer) {
+          fractalPaths[path] = []
+        }
+        // if (fractalPaths[path].length === this.columns) {
+        //   continue
+        // }
 
-      // если нет состояния в путях, то добавляем
-      const path = layers.reduce((acc, elem) => acc + elem.column, '')
-      const targetLayer = fractalPaths.find((elem) => elem.path === path)
-      if (!targetLayer) {
-        fractalPaths.push({ path, connect: [] })
-      }
-
-      for (let i = 0; i < this.countLayers; i++) {
-        for (let j = 0; j < this.countLayers; j++) {
-          if (j === i) continue
-          if (
-            !(
-              (layers[i].size > layers[j].size || 0 === i) &&
-              !layers.find((elem) => layers[i].column === elem.column && elem.size > layers[i].size)
-            )
-          ) {
-            continue
-          }
-
-          for (let k = 0; k < this.columns; k++) {
-            // если выше айтема лежит что-то в той же колонке
-            if (layers.find((elem) => elem.size > layers[i].size && elem.column === k)) {
-              continue
-            }
-            const size = layers[i].size
-            const col = k
-
-            const layersNew = layers.map((elem) => (elem.size === size ? { size: elem.size, column: col } : elem))
-            const newPathConnect = layersNew.reduce((acc, elem) => acc + elem.column, '')
-
-            if (newPathConnect === path) {
+        for (let i = 0; i < this.countLayers; i++) {
+          for (let j = 0; j < this.countLayers; j++) {
+            if (j === i) continue
+            if (
+              !(
+                (layers[i].size > layers[j].size || 0 === i) &&
+                !layers.find((elem) => layers[i].column === elem.column && elem.size > layers[i].size)
+              )
+            ) {
               continue
             }
 
-            let skip = false
-            // делаем новые пути фрактала
-            const newFractalPaths = fractalPaths.map((elem) => {
-              if (elem.path === path) {
-                // если новый путь уже есть в текущем, то будет скипать
-                if (elem.connect.includes(newPathConnect)) {
-                  skip = true
-                  return elem
-                } else {
-                  //иначе добавляем и в следующий раз скипаем
-                  elem.connect.push(newPathConnect)
-                  return elem
-                }
-              } else {
-                return elem
+            for (let k = 0; k < this.columns; k++) {
+              // если выше айтема лежит что-то в той же колонке
+              if (layers.find((elem) => elem.size > layers[i].size && elem.column === k)) {
+                continue
               }
-            })
-            fractalPaths = newFractalPaths
+              const size = layers[i].size
+              const col = k
 
-            if (skip) {
-              continue
+              const layersNew = layers.map((elem) => (elem.size === size ? { size: elem.size, column: col } : elem))
+              const newPathConnect = layersNew.reduce((acc, elem) => acc + elem.column, '')
+
+              if (newPathConnect === path) {
+                continue
+              }
+
+              let skip = false
+              // делаем новые пути фрактала
+              const targetFractalPath = fractalPaths[path]
+              if (targetFractalPath) {
+                if (targetFractalPath.includes(newPathConnect)) {
+                  skip = true
+                } else {
+                  fractalPaths[path] = fractalPaths[path].concat([newPathConnect])
+                }
+              }
+
+              if (skip) {
+                continue
+              }
+
+              stack.push(layersNew)
             }
-
-            res.push({
-              layers: layersNew,
-              variants: []
-            })
           }
         }
       }
-
-      if (!res) {
-        return []
-      }
-      const newRes = res.map((elem): fractalT => {
-        const variants = findVariants(elem.layers)
-        return { ...elem, variants }
-      })
-      return newRes
     }
-    fractal.variants = findVariants(Layers)
+    findVariants(Layers)
+    const end = new Date()
+    console.log('end: ' + (end.getTime() - start.getTime()))
 
     const dejkstra = new WeightedGraph()
 
-    fractalPaths.forEach((elem) => {
-      dejkstra.addVertex(elem.path)
+    Object.keys(fractalPaths).forEach((elem) => {
+      dejkstra.addVertex(elem)
     })
 
-    fractalPaths.forEach((elem) => {
-      elem.connect.forEach((path) => {
-        dejkstra.addEdge(elem.path, path, 1)
+    Object.keys(fractalPaths).forEach((elem) => {
+      fractalPaths[elem].forEach((path) => {
+        dejkstra.addEdge(elem, path, 1)
       })
     })
 
-    console.log(fractalPaths)
+    console.log(JSON.stringify(fractalPaths))
 
-    const paths = dejkstra.Dijkstra(currentLayerPath, '2222222') as string[]
+    // start find optimal path to win
+    const pathsArray = Array(this.columns)
+      .fill(null)
+      .map((_, i) =>
+        i > 0
+          ? (dejkstra.Dijkstra(
+              currentLayerPath,
+              new Array(this.countLayers)
+                .fill(null)
+                .map(() => i)
+                .join('')
+            ) as string[])
+          : null
+      )
 
+    const paths = pathsArray.reduce((acc, elem) => (!acc ? elem : elem && acc.length < elem.length ? acc : elem), pathsArray[0])
+    // end find optimal path to win
+
+    console.log(paths)
+    if (!paths) {
+      return
+    }
+    console.log(paths.length - 1)
+    // console.log(dejkstra.Dijkstra(currentLayerPath, '2222222'))
     let prev: { size: number; column: number }[] = []
     paths.forEach((elem, index) => {
       const normalize = elem.split('').map((elem, index) => ({ size: index, column: +elem }))
@@ -634,7 +636,7 @@ class HanoiTower {
         return
       }
 
-      setTimeout(() => this.changeColumnLayer({ column: newColumn || 0, idLayer: targerLayer?.id }), index * 200)
+      setTimeout(() => this.changeColumnLayer({ column: newColumn || 0, idLayer: targerLayer?.id }), index * 30)
     })
   }
 }
