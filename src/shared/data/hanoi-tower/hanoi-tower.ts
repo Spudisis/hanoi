@@ -491,15 +491,24 @@ class HanoiTower {
 
   handleAutoPlay() {
     const Layers = this.towerLayers.sort((b, a) => b.size - a.size).map((elem) => ({ column: elem.column, size: elem.size }))
-    console.log(JSON.stringify(Layers))
 
     const currentLayerPath = Layers.reduce((acc, elem) => acc + elem.column, '')
 
     const fractalPaths: { [key: string]: string[] } = {}
-    const start = new Date()
 
     const maxConnectForPath = this.columns + (this.columns - MAX_COLUMNS[0]) * 2
-    console.log('start')
+
+    const pathsArray = Array(this.columns)
+      .fill(null)
+      .map((_, i) =>
+        i > 0
+          ? new Array(this.countLayers)
+              .fill(null)
+              .map(() => i)
+              .join('')
+          : null
+      )
+
     const findVariants = (initLayers: typeof Layers) => {
       const stack: (typeof Layers)[] = [initLayers]
 
@@ -562,8 +571,6 @@ class HanoiTower {
       }
     }
     findVariants(Layers)
-    const end = new Date()
-    console.log('end: ' + (end.getTime() - start.getTime()))
 
     const dejkstra = new WeightedGraph()
 
@@ -577,31 +584,17 @@ class HanoiTower {
       })
     })
 
-    console.log(JSON.stringify(fractalPaths))
-
     // start find optimal path to win
-    const pathsArray = Array(this.columns)
-      .fill(null)
-      .map((_, i) =>
-        i > 0
-          ? (dejkstra.Dijkstra(
-              currentLayerPath,
-              new Array(this.countLayers)
-                .fill(null)
-                .map(() => i)
-                .join('')
-            ) as string[])
-          : null
-      )
 
-    const paths = pathsArray.reduce((acc, elem) => (!acc ? elem : elem && acc.length < elem.length ? acc : elem), pathsArray[0])
+    const dejkstraPaths = pathsArray.map((elem) => (elem ? (dejkstra.Dijkstra(currentLayerPath, elem) as string[]) : null))
+
+    const paths = dejkstraPaths.reduce((acc, elem) => (!acc ? elem : elem && acc.length < elem.length ? acc : elem), dejkstraPaths[0])
     // end find optimal path to win
 
-    console.log(paths)
     if (!paths) {
       return
     }
-    console.log(paths.length - 1)
+
     // console.log(dejkstra.Dijkstra(currentLayerPath, '2222222'))
     let prev: { size: number; column: number }[] = []
     paths.forEach((elem, index) => {
