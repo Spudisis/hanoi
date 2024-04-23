@@ -4,3 +4,9 @@
 
 [Wiki.
 ](https://en.wikipedia.org/wiki/Tower_of_Hanoi)
+
+1. Randomise or rainbow colored tower
+2. Autoplay
+3. History
+4. Customise layers and columns
+5. Drag and drop
