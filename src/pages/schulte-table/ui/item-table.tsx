@@ -27,7 +27,7 @@ const ItemTable = ({ children }: ItemTableProps) => {
       onClick={() => handleClick(children)}
       className={twMerge(
         clsx(
-          'border bg-white transition font-bold text-xl border-gray-500 flex h-full w-full justify-center items-center',
+          'border bg-white transition font-bold text-2xl border-gray-500 flex h-full w-full justify-center items-center',
           { 'bg-green-500': hasBeenSelected && isMarkAnswers },
           error ? 'animate-error-pulse' : !hasBeenSelected ? 'hover:bg-green-200' : ''
         )
