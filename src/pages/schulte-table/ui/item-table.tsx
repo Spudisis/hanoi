@@ -23,13 +23,13 @@ const ItemTable = ({ children }: ItemTableProps) => {
 
   return (
     <button
-      disabled={hasBeenSelected}
+      disabled={hasBeenSelected && isMarkAnswers}
       onClick={() => handleClick(children)}
       className={twMerge(
         clsx(
           'border bg-white transition font-bold text-2xl border-gray-500 flex h-full w-full justify-center items-center',
           { 'bg-green-500': hasBeenSelected && isMarkAnswers },
-          error ? 'animate-error-pulse' : !hasBeenSelected ? 'hover:bg-green-200' : ''
+          error ? 'animate-error-pulse' : !hasBeenSelected || !isMarkAnswers ? 'hover:bg-green-200' : ''
         )
       )}
     >
