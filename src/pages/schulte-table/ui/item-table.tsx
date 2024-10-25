@@ -2,6 +2,7 @@ import { useState } from 'react'
 
 import { clsx } from 'clsx'
 import { observer } from 'mobx-react-lite'
+import { twMerge } from 'tw-merge'
 
 import { SchulteTableGame } from '@/shared/data/schute-table'
 
@@ -24,10 +25,12 @@ const ItemTable = ({ children }: ItemTableProps) => {
     <button
       disabled={hasBeenSelected}
       onClick={() => handleClick(children)}
-      className={clsx(
-        'border transition font-bold text-xl border-gray-500 flex h-full w-full justify-center items-center',
-        { 'bg-green-500': hasBeenSelected && isMarkAnswers },
-        error ? 'animate-error-pulse' : !hasBeenSelected ? 'hover:bg-green-200' : ''
+      className={twMerge(
+        clsx(
+          'border bg-white transition font-bold text-xl border-gray-500 flex h-full w-full justify-center items-center',
+          { 'bg-green-500': hasBeenSelected && isMarkAnswers },
+          error ? 'animate-error-pulse' : !hasBeenSelected ? 'hover:bg-green-200' : ''
+        )
       )}
     >
       {children}
