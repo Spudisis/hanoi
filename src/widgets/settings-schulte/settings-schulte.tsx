@@ -3,6 +3,7 @@ import { memo } from 'react'
 import { CurrentNumberObservered } from '@/widgets/settings-schulte/ui/current-number.tsx'
 import { TimerObservered } from '@/widgets/settings-schulte/ui/timer.tsx'
 
+import { ChangeDelayUltraModeSchulteObservered } from '@/features/change-delay-ultra-mode-schulte'
 import { ChangeSizeTableSchulteObservered } from '@/features/change-size-table-schulte'
 import { ResetGameSchulteObservered } from '@/features/reset-game-schulte'
 import { StartGameSchulteObservered } from '@/features/start-game-schulte'
@@ -25,6 +26,7 @@ const SettingsSchulte = () => {
       <ToggleMarkAnswersSchulteObservered />
       <ToggleHardModeSchulteObservered />
       <ToggleHardModeUltraSchulteObservered />
+      <ChangeDelayUltraModeSchulteObservered />
 
       <div className='grid grid-cols-2 gap-2'>
         <ResetGameSchulteObservered />

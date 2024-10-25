@@ -11,6 +11,7 @@ class SchulteTable {
 
   isHardMode = false
   isUltraHardMode = false
+  delayShuffleUltraMode = 1000
 
   timerUltraMode: NodeJS.Timeout | null = null
 
@@ -141,7 +142,7 @@ class SchulteTable {
     if (this.isUltraHardMode) {
       this.timerUltraMode = setInterval(() => {
         this.shuffleArray()
-      }, 1000)
+      }, this.delayShuffleUltraMode)
     }
 
     this.timer = setInterval(() => {
@@ -172,6 +173,10 @@ class SchulteTable {
     this.toggleModalWin(b)
   }
 
+  changeDelayShuffleUltraMode(ms: number) {
+    this.delayShuffleUltraMode = ms
+  }
+
   toggleModalWin(b?: boolean) {
     this.statusModalWin = b ?? !this.statusModalWin
   }
@@ -190,6 +195,7 @@ class SchulteTable {
     this.toggleHardGame(false)
     this.clearIntervalTime()
     this.clearIntervalUltraMode()
+    this.delayShuffleUltraMode = 1000
   }
 
   resetGame() {
