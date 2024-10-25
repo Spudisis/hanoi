@@ -2,24 +2,35 @@ import { makeAutoObservable } from 'mobx'
 
 import { shuffleArray } from '@/shared/data/shuffle.ts'
 
+import { INIT_TABLE, SIZE_TABLE } from './config.ts'
+
 class SchulteTable {
   constructor() {
     makeAutoObservable(this, {}, { autoBind: true })
   }
   isBindValues = true
-  weight = 3
-  height = 3
+  weight: number = SIZE_TABLE.weight.default
+  height: number = SIZE_TABLE.height.default
   lastCorrectNumber = 0
 
   countErrors = 0
 
-  isRunningGame = false
+  isPrecessingGaming = false
 
   timer: NodeJS.Timeout | null = null
   gameTime: number = 0
 
+  statusModalWin = false
+  statusWin = false
+
+  shuffledArray: number[] = INIT_TABLE
+
   get sizeArr() {
     return this.weight * this.height
+  }
+
+  get isRunningGame() {
+    return this.isPrecessingGaming || this.statusWin
   }
 
   get time() {
@@ -35,26 +46,29 @@ class SchulteTable {
     return secondsToTime(this.gameTime / 1000)
   }
 
-  get filledShuffledArray() {
+  shuffleArray() {
     const sizeArr = this.sizeArr
     const ArrNumber = new Array(sizeArr).fill('').map((_, i) => ++i)
-    return shuffleArray(ArrNumber)
+    this.shuffledArray = shuffleArray(ArrNumber)
+  }
+
+  get filledShuffledArray() {
+    return this.shuffledArray
   }
 
   changeSize(value: number) {
     this.weight = value
     this.height = value
+    this.shuffleArray()
   }
 
   changeWeight(newWeight: number) {
-    if (this.isBindValues) {
-      this.changeSize(newWeight)
-    } else this.weight = newWeight
+    this.weight = newWeight
+    this.shuffleArray()
   }
   changeHeight(newHeight: number) {
-    if (this.isBindValues) {
-      this.changeSize(newHeight)
-    } else this.height = newHeight
+    this.height = newHeight
+    this.shuffleArray()
   }
 
   toggleBindValues(b?: boolean) {
@@ -70,13 +84,14 @@ class SchulteTable {
   }
 
   selectNumber(b: number) {
-    if (!this.isRunningGame) {
+    if (!this.isPrecessingGaming) {
       this.startGame()
     }
     if (this.lastCorrectNumber + 1 === b) {
       this.lastCorrectNumber = b
       if (this.sizeArr === b) {
         this.endGame()
+        this.changeStatusWinGame()
       }
       return true
     }
@@ -85,9 +100,7 @@ class SchulteTable {
   }
 
   startGame() {
-    this.resetGame()
-
-    this.isRunningGame = true
+    this.isPrecessingGaming = true
     const started = new Date().getTime()
 
     this.timer = setInterval(() => {
@@ -97,7 +110,8 @@ class SchulteTable {
   }
 
   endGame() {
-    this.isRunningGame = false
+    this.isPrecessingGaming = false
+    this.statusWin = true
     this.clearInterval()
   }
 
@@ -107,23 +121,36 @@ class SchulteTable {
     }
   }
 
+  changeStatusWinGame(b?: boolean) {
+    this.toggleModalWin(b)
+  }
+
+  toggleModalWin(b?: boolean) {
+    this.statusModalWin = b ?? !this.statusModalWin
+  }
+
   reset() {
     this.weight = 3
     this.height = 3
     this.isBindValues = true
     this.lastCorrectNumber = 0
     this.countErrors = 0
-    this.isRunningGame = false
+    this.isPrecessingGaming = false
     this.gameTime = 0
+    this.statusModalWin = false
+    this.statusWin = false
     this.clearInterval()
   }
 
   resetGame() {
     this.lastCorrectNumber = 0
     this.countErrors = 0
-    this.isRunningGame = false
+    this.isPrecessingGaming = false
     this.gameTime = 0
+    this.statusModalWin = false
+    this.statusWin = false
     this.clearInterval()
+    this.shuffleArray()
   }
 }
 export const SchulteTableGame = new SchulteTable()

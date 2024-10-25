@@ -1,5 +1,6 @@
 import { useEffect } from 'react'
 
+import { ModalWinGameObservered } from '@/pages/schulte-table/ui/modal-win-game.tsx'
 import { TableSchulteObservered } from '@/pages/schulte-table/ui/table-schulte.tsx'
 import { observer } from 'mobx-react-lite'
 
@@ -22,6 +23,7 @@ const SchulteTable = () => {
       <div className='flex h-full'>
         <SidebarSchulteMemo />
       </div>
+      <ModalWinGameObservered />
     </div>
   )
 }
