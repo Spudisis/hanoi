@@ -8,7 +8,7 @@ import { SchulteTableGame } from '@/shared/data/schute-table'
 type ItemTableProps = { children: number }
 
 const ItemTable = ({ children }: ItemTableProps) => {
-  const { selectNumber, lastCorrectNumber } = SchulteTableGame
+  const { selectNumber, lastCorrectNumber, isMarkAnswers } = SchulteTableGame
   const [error, setError] = useState(false)
   const handleClick = (b: number) => {
     const res = selectNumber(b)
@@ -26,7 +26,7 @@ const ItemTable = ({ children }: ItemTableProps) => {
       onClick={() => handleClick(children)}
       className={clsx(
         'border transition font-bold text-xl border-gray-500 flex h-full w-full justify-center items-center',
-        { 'bg-green-500': hasBeenSelected },
+        { 'bg-green-500': hasBeenSelected && isMarkAnswers },
         error ? 'animate-error-pulse' : !hasBeenSelected ? 'hover:bg-green-200' : ''
       )}
     >

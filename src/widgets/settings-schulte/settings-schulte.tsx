@@ -7,6 +7,7 @@ import { ChangeSizeTableSchulteObservered } from '@/features/change-size-table-s
 import { ResetGameSchulteObservered } from '@/features/reset-game-schulte'
 import { StartGameSchulteObservered } from '@/features/start-game-schulte'
 import { ToggleChainSizeSchulteObservered } from '@/features/toggle-chain-size-schulte'
+import { ToggleMarkAnswersSchulteObservered } from '@/features/toggle-mark-answers-schulte'
 
 import { CountErrorsObservered } from './ui/count-errors.tsx'
 
@@ -19,6 +20,7 @@ const SettingsSchulte = () => {
 
       <ToggleChainSizeSchulteObservered />
       <ChangeSizeTableSchulteObservered />
+      <ToggleMarkAnswersSchulteObservered />
 
       <div className='grid grid-cols-2 gap-2'>
         <ResetGameSchulteObservered />

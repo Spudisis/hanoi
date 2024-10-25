@@ -23,6 +23,8 @@ class SchulteTable {
   statusModalWin = false
   statusWin = false
 
+  isMarkAnswers = true
+
   shuffledArray: number[] = INIT_TABLE
 
   get sizeArr() {
@@ -92,6 +94,10 @@ class SchulteTable {
         this.changeWeight(this.height)
       }
     }
+  }
+
+  toggleIsMarkAnswers(b?: boolean) {
+    this.isMarkAnswers = b ?? !this.isMarkAnswers
   }
 
   selectNumber(b: number) {
