@@ -9,7 +9,10 @@ class SchulteTable {
     makeAutoObservable(this, {}, { autoBind: true })
   }
 
-  isHardGame = false
+  isHardMode = false
+  isUltraHardMode = false
+
+  timerUltraMode: NodeJS.Timeout | null = null
 
   isBindValues = true
   weight: number = SIZE_TABLE.weight.default
@@ -104,7 +107,13 @@ class SchulteTable {
   }
 
   toggleHardGame(b?: boolean) {
-    this.isHardGame = b ?? !this.isHardGame
+    this.isHardMode = b ?? !this.isHardMode
+    if (this.isUltraHardMode) {
+      this.toggleUltraHardGame(false)
+    }
+  }
+  toggleUltraHardGame(b?: boolean) {
+    this.isUltraHardMode = b ?? !this.isUltraHardMode
   }
 
   selectNumber(b: number) {
@@ -116,7 +125,7 @@ class SchulteTable {
       if (this.sizeArr === b) {
         this.endGame()
         this.changeStatusWinGame()
-      } else if (this.isHardGame) {
+      } else if (this.isHardMode && !this.isUltraHardMode) {
         this.shuffleArray()
       }
       return true
@@ -129,6 +138,12 @@ class SchulteTable {
     this.isPrecessingGaming = true
     const started = new Date().getTime()
 
+    if (this.isUltraHardMode) {
+      this.timerUltraMode = setInterval(() => {
+        this.shuffleArray()
+      }, 1000)
+    }
+
     this.timer = setInterval(() => {
       const current = new Date().getTime()
       this.gameTime = current - started
@@ -138,12 +153,18 @@ class SchulteTable {
   endGame() {
     this.isPrecessingGaming = false
     this.statusWin = true
-    this.clearInterval()
+    this.clearIntervalTime()
+    this.clearIntervalUltraMode()
   }
 
-  clearInterval() {
+  clearIntervalTime() {
     if (this.timer) {
       clearInterval(this.timer)
+    }
+  }
+  clearIntervalUltraMode() {
+    if (this.timerUltraMode) {
+      clearInterval(this.timerUltraMode)
     }
   }
 
@@ -166,8 +187,9 @@ class SchulteTable {
     this.statusModalWin = false
     this.statusWin = false
     this.isMarkAnswers = true
-    this.isHardGame = false
-    this.clearInterval()
+    this.toggleHardGame(false)
+    this.clearIntervalTime()
+    this.clearIntervalUltraMode()
   }
 
   resetGame() {
@@ -177,8 +199,9 @@ class SchulteTable {
     this.gameTime = 0
     this.statusModalWin = false
     this.statusWin = false
-    this.clearInterval()
+    this.clearIntervalTime()
     this.shuffleArray()
+    this.clearIntervalUltraMode()
   }
 }
 export const SchulteTableGame = new SchulteTable()
