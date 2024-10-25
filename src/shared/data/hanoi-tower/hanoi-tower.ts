@@ -194,10 +194,6 @@ class HanoiTower {
     return (this.countLayers + 1) * 1.75 + 'rem'
   }
 
-  changeStatusSidebar(status?: boolean) {
-    this.statusSidebar = status || !this.statusSidebar
-  }
-
   changeDraggedLayoutId(id: string | null) {
     this.#draggedLayoutId = id
   }
@@ -211,8 +207,7 @@ class HanoiTower {
 
     if (!sortedColumn.length) return null
 
-    const isUpperLayout = sortedColumn[0].id === id
-    return isUpperLayout
+    return sortedColumn[0].id === id
   }
 
   get requiredMinRearrangementBasedOnSettings() {
@@ -340,6 +335,41 @@ class HanoiTower {
     this.historyTowerLayers = [{ step: 0, layers: [] }]
     this.generateLayerTower()
     this.rearrangementCount = 0
+  }
+
+  reset() {
+    this.gameMode = 'Normal'
+    this.isWin = false
+    this.modalIsWin = false
+
+    this.columns = MAX_COLUMNS[0]
+    this.countLayers = LAYERS_COUNT[7]
+
+    this.columnsInit = MAX_COLUMNS[0]
+    this.countLayersInit = LAYERS_COUNT[7]
+
+    this.rearrangementCount = 0
+    this.initTowerLayers = []
+    this.towerLayers = []
+    this.historyTowerLayers = []
+
+    this.step = 0
+    this.currentStep = 0
+
+    this.#draggedLayoutId = null
+    this.draggedLayoutSize = null
+
+    this.statusSidebar = false
+
+    if (this.holdDownMouse) {
+      clearTimeout(this.holdDownMouse)
+    }
+    this.holdDownMouse = null
+    if (this.holdDownMouseCbTimer) {
+      clearTimeout(this.holdDownMouseCbTimer)
+    }
+    this.holdDownMouseCbTimer = null
+    this.generateLayerNormalGameMode()
   }
 
   changeColumnLayer({ column, idLayer }: { column: number; idLayer: string }) {

@@ -1,1 +1,1 @@
-export { SchulteTable } from './schulte-table.tsx'
+export { SchulteTableObservered } from './schulte-table.tsx'

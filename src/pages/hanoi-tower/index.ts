@@ -1,1 +1,1 @@
-export { HanoiTower } from './page'
+export { HanoiTowerObservered } from './hanoi-tower.tsx'
