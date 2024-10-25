@@ -9,7 +9,7 @@ const ModalWinGame = () => {
     <Modal
       status={statusModalWin}
       title='Congrats!'
-      onClose={toggleModalWin}
+      onClose={() => toggleModalWin()}
       body={
         <Typography>
           Win game size {weight}x{height} with time {time}
