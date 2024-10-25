@@ -8,6 +8,9 @@ class SchulteTable {
   constructor() {
     makeAutoObservable(this, {}, { autoBind: true })
   }
+
+  isHardGame = false
+
   isBindValues = true
   weight: number = SIZE_TABLE.weight.default
   height: number = SIZE_TABLE.height.default
@@ -100,6 +103,10 @@ class SchulteTable {
     this.isMarkAnswers = b ?? !this.isMarkAnswers
   }
 
+  toggleHardGame(b?: boolean) {
+    this.isHardGame = b ?? !this.isHardGame
+  }
+
   selectNumber(b: number) {
     if (!this.isPrecessingGaming) {
       this.startGame()
@@ -109,6 +116,8 @@ class SchulteTable {
       if (this.sizeArr === b) {
         this.endGame()
         this.changeStatusWinGame()
+      } else if (this.isHardGame) {
+        this.shuffleArray()
       }
       return true
     }
@@ -156,6 +165,8 @@ class SchulteTable {
     this.gameTime = 0
     this.statusModalWin = false
     this.statusWin = false
+    this.isMarkAnswers = true
+    this.isHardGame = false
     this.clearInterval()
   }
 
