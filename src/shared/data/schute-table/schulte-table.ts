@@ -56,6 +56,17 @@ class SchulteTable {
     return this.shuffledArray
   }
 
+  get sizeCell() {
+    const max = Math.max(this.weight, this.height)
+    if (max <= 7) {
+      return '100px'
+    } else if (max <= 9) {
+      return '75px'
+    } else {
+      return '50px'
+    }
+  }
+
   changeSize(value: number) {
     this.weight = value
     this.height = value

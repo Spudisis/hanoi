@@ -5,14 +5,14 @@ import { SchulteTableGame } from '@/shared/data/schute-table'
 import { ItemTableObservered } from './item-table.tsx'
 
 const TableSchulte = () => {
-  const { weight, height, filledShuffledArray } = SchulteTableGame
+  const { weight, height, filledShuffledArray, sizeCell } = SchulteTableGame
 
   return (
     <div
       className='grid'
       style={{
-        gridTemplateColumns: `repeat(${weight}, 100px)`,
-        gridTemplateRows: `repeat(${height}, 100px)`
+        gridTemplateColumns: `repeat(${weight}, ${sizeCell})`,
+        gridTemplateRows: `repeat(${height}, ${sizeCell})`
       }}
     >
       {filledShuffledArray.map((elem) => (

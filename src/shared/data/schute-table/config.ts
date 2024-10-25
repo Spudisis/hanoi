@@ -2,12 +2,12 @@ import { shuffleArray } from '@/shared/data/shuffle.ts'
 
 export const SIZE_TABLE = {
   weight: {
-    max: 7,
+    max: 13,
     default: 3,
     min: 2
   },
   height: {
-    max: 7,
+    max: 13,
     default: 3,
     min: 2
   }
