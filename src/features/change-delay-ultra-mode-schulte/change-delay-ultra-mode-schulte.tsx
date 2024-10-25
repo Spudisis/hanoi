@@ -1,6 +1,6 @@
 import { observer } from 'mobx-react-lite'
 
-import { SchulteTableGame } from '@/shared/data/schute-table'
+import { DELAY_SHUFFLE_ULTRA, SchulteTableGame } from '@/shared/data/schute-table'
 import { Range } from '@/shared/ui'
 
 const ChangeDelayUltraModeSchulte = () => {
@@ -14,12 +14,12 @@ const ChangeDelayUltraModeSchulte = () => {
       label='Delay shuffle'
       value={delayShuffleUltraMode}
       disabled={isRunningGame}
-      max={3000}
-      step={100}
-      min={300}
+      max={DELAY_SHUFFLE_ULTRA.max}
+      step={DELAY_SHUFFLE_ULTRA.step}
+      min={DELAY_SHUFFLE_ULTRA.min}
       onChange={(e) => changeDelayShuffleUltraMode(Number(e.target.value))}
     >
-      <div>{delayShuffleUltraMode}</div>
+      <div>{(delayShuffleUltraMode / 1000).toFixed(1)}s</div>
     </Range>
   )
 }
