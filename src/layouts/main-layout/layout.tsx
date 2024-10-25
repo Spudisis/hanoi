@@ -7,7 +7,7 @@ export const MainLayout = () => {
     <div className='min-h-screen flex flex-col justify-between'>
       <Header />
       <main className='w-full h-full justify-center relative flex flex-1'>
-        <div className='w-full flex items-center'>
+        <div className='w-full flex items-center '>
           <Outlet />
         </div>
       </main>
