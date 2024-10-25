@@ -87,9 +87,9 @@ class SchulteTable {
     this.isBindValues = newValue
     if (newValue) {
       if (this.weight > this.height) {
-        this.height = this.weight
+        this.changeHeight(this.weight)
       } else {
-        this.weight = this.height
+        this.changeWeight(this.height)
       }
     }
   }
