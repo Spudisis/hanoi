@@ -116,9 +116,10 @@ class SchulteTable {
     if (e.key === 'ArrowRight' || e.key === 'ArrowLeft' || e.key === 'ArrowUp' || e.key === 'ArrowDown') {
       const col = this.focusItem.col
       const row = this.focusItem.row
+      const isShiftPressed = e.shiftKey
 
       if (e.key === 'ArrowLeft') {
-        const newCol = col > 0 ? col - 1 : this.weight - 1
+        const newCol = col > 0 ? (isShiftPressed ? 0 : col - 1) : this.weight - 1
 
         this.focusItem = {
           col: newCol,
@@ -126,7 +127,7 @@ class SchulteTable {
         }
       }
       if (e.key === 'ArrowRight') {
-        const newCol = col < this.weight - 1 ? col + 1 : 0
+        const newCol = col < this.weight - 1 ? (isShiftPressed ? this.weight - 1 : col + 1) : 0
 
         this.focusItem = {
           col: newCol,
@@ -134,7 +135,7 @@ class SchulteTable {
         }
       }
       if (e.key === 'ArrowUp') {
-        const newRow = row > 0 ? row - 1 : this.height - 1
+        const newRow = row > 0 ? (isShiftPressed ? 0 : row - 1) : this.height - 1
 
         this.focusItem = {
           col,
@@ -142,7 +143,7 @@ class SchulteTable {
         }
       }
       if (e.key === 'ArrowDown') {
-        const newRow = row < this.height - 1 ? row + 1 : 0
+        const newRow = row < this.height - 1 ? (isShiftPressed ? this.height - 1 : row + 1) : 0
         this.focusItem = {
           col,
           row: newRow
