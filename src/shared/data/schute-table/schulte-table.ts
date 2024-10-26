@@ -41,6 +41,10 @@ class SchulteTable {
     return this.weight * this.height
   }
 
+  get needToFindNumber() {
+    return this.isReverseMode ? this.lastCorrectNumber - 1 : this.lastCorrectNumber + 1
+  }
+
   get isRunningGame() {
     return this.isPrecessingGaming || this.statusWin
   }
