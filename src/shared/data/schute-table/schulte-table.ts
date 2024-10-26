@@ -1,4 +1,4 @@
-import { makeAutoObservable } from 'mobx'
+import { makeAutoObservable, reaction } from 'mobx'
 
 import { shuffleArray } from '@/shared/data/shuffle.ts'
 
@@ -11,6 +11,7 @@ class SchulteTable {
 
   isHardMode = false
   isUltraHardMode = false
+  isReverseMode = false
   delayShuffleUltraMode = 1000
 
   timerUltraMode: NodeJS.Timeout | null = null
@@ -34,7 +35,7 @@ class SchulteTable {
 
   shuffledArray: { number: number; status: boolean }[] = INIT_TABLE
 
-  focusItem: { col: number; row: number } = { col: 0, row: 0 }
+  focusItem: { col: number; row: number } | null = null
 
   get sizeArr() {
     return this.weight * this.height
@@ -107,6 +108,7 @@ class SchulteTable {
   }
 
   eventNavigateByArrows(e: KeyboardEvent) {
+    if (!this.focusItem) return null
     if (e.key === 'ArrowRight' || e.key === 'ArrowLeft' || e.key === 'ArrowUp' || e.key === 'ArrowDown') {
       const col = this.focusItem.col
       const row = this.focusItem.row
@@ -160,6 +162,15 @@ class SchulteTable {
   toggleIsMarkAnswers(b?: boolean) {
     this.isMarkAnswers = b ?? !this.isMarkAnswers
   }
+  toggleReverseModeGame(b?: boolean) {
+    const status = b ?? !this.isReverseMode
+    this.isReverseMode = status
+    if (status) {
+      this.lastCorrectNumber = this.sizeArr
+    } else {
+      this.lastCorrectNumber = 0
+    }
+  }
 
   toggleHardGame(b?: boolean) {
     this.isHardMode = b ?? !this.isHardMode
@@ -176,6 +187,7 @@ class SchulteTable {
       this.startGame()
     }
     this.setActiveFocus(index)
+
     if (this.lastCorrectNumber + 1 === b) {
       this.lastCorrectNumber = b
       this.shuffledArray[index].status = true
@@ -194,7 +206,7 @@ class SchulteTable {
   startGame() {
     this.isPrecessingGaming = true
     const started = new Date().getTime()
-
+    this.focusItem = { col: 0, row: 0 }
     if (this.isUltraHardMode) {
       this.timerUltraMode = setInterval(() => {
         this.shuffleArray()
@@ -252,6 +264,7 @@ class SchulteTable {
     this.clearIntervalTime()
     this.clearIntervalUltraMode()
     this.delayShuffleUltraMode = 1000
+    this.focusItem = null
   }
 
   resetGame() {
@@ -264,6 +277,18 @@ class SchulteTable {
     this.clearIntervalTime()
     this.shuffleArray()
     this.clearIntervalUltraMode()
+    this.focusItem = null
   }
 }
 export const SchulteTableGame = new SchulteTable()
+
+reaction(
+  () => SchulteTableGame.isRunningGame,
+  (value) => {
+    if (value) {
+      document.addEventListener('keydown', SchulteTableGame.eventNavigateByArrows)
+    } else {
+      document.removeEventListener('keydown', SchulteTableGame.eventNavigateByArrows)
+    }
+  }
+)

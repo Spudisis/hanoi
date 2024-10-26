@@ -11,6 +11,7 @@ import { ToggleChainSizeSchulteObservered } from '@/features/toggle-chain-size-s
 import { ToggleHardModeSchulteObservered } from '@/features/toggle-hard-mode-schulte'
 import { ToggleHardModeUltraSchulteObservered } from '@/features/toggle-hard-mode-ultra-schulte'
 import { ToggleMarkAnswersSchulteObservered } from '@/features/toggle-mark-answers-schulte'
+import { ToggleReverseModeSchulteObservered } from '@/features/toggle-reverse-mode-schulte'
 
 import { CountErrorsObservered } from './ui/count-errors.tsx'
 
@@ -24,6 +25,7 @@ const SettingsSchulte = () => {
       <ToggleChainSizeSchulteObservered />
       <ChangeSizeTableSchulteObservered />
       <ToggleMarkAnswersSchulteObservered />
+      <ToggleReverseModeSchulteObservered />
       <ToggleHardModeSchulteObservered />
       <ToggleHardModeUltraSchulteObservered />
       <ChangeDelayUltraModeSchulteObservered />
