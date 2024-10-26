@@ -32,7 +32,9 @@ class SchulteTable {
 
   isMarkAnswers = true
 
-  shuffledArray: number[] = INIT_TABLE
+  shuffledArray: { number: number; status: boolean }[] = INIT_TABLE
+
+  focusItem: { col: number; row: number } = { col: 0, row: 0 }
 
   get sizeArr() {
     return this.weight * this.height
@@ -40,6 +42,13 @@ class SchulteTable {
 
   get isRunningGame() {
     return this.isPrecessingGaming || this.statusWin
+  }
+
+  get activeItem() {
+    if (this.focusItem) {
+      return this.focusItem.col + this.height * this.focusItem.row
+    }
+    return null
   }
 
   get time() {
@@ -57,7 +66,7 @@ class SchulteTable {
 
   shuffleArray() {
     const sizeArr = this.sizeArr
-    const ArrNumber = new Array(sizeArr).fill('').map((_, i) => ++i)
+    const ArrNumber = new Array(sizeArr).fill('').map((_, i) => ({ status: false, number: ++i }))
     this.shuffledArray = shuffleArray(ArrNumber)
   }
 
@@ -91,6 +100,51 @@ class SchulteTable {
     this.shuffleArray()
   }
 
+  setActiveFocus(index: number) {
+    const col = index % this.weight
+    const row = Math.floor(index / this.height)
+    this.focusItem = { col, row }
+  }
+
+  eventNavigateByArrows(e: KeyboardEvent) {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowLeft' || e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+      const col = this.focusItem.col
+      const row = this.focusItem.row
+
+      if (e.key === 'ArrowLeft') {
+        const newCol = col > 0 ? col - 1 : this.weight - 1
+
+        this.focusItem = {
+          col: newCol,
+          row
+        }
+      }
+      if (e.key === 'ArrowRight') {
+        const newCol = col < this.weight - 1 ? col + 1 : 0
+
+        this.focusItem = {
+          col: newCol,
+          row
+        }
+      }
+      if (e.key === 'ArrowUp') {
+        const newRow = row > 0 ? row - 1 : this.height - 1
+
+        this.focusItem = {
+          col,
+          row: newRow
+        }
+      }
+      if (e.key === 'ArrowDown') {
+        const newRow = row < this.height - 1 ? row + 1 : 0
+        this.focusItem = {
+          col,
+          row: newRow
+        }
+      }
+    }
+  }
+
   toggleBindValues(b?: boolean) {
     const newValue = b ?? !this.isBindValues
     this.isBindValues = newValue
@@ -117,12 +171,14 @@ class SchulteTable {
     this.isUltraHardMode = b ?? !this.isUltraHardMode
   }
 
-  selectNumber(b: number) {
+  selectNumber(b: number, index: number) {
     if (!this.isPrecessingGaming) {
       this.startGame()
     }
+    this.setActiveFocus(index)
     if (this.lastCorrectNumber + 1 === b) {
       this.lastCorrectNumber = b
+      this.shuffledArray[index].status = true
       if (this.sizeArr === b) {
         this.endGame()
         this.changeStatusWinGame()

@@ -20,6 +20,8 @@ export const DELAY_SHUFFLE_ULTRA = {
 }
 
 export const INIT_TABLE = (() => {
-  const ArrNumber = new Array(SIZE_TABLE.weight.default * SIZE_TABLE.height.default).fill('').map((_, i) => ++i)
+  const ArrNumber = new Array(SIZE_TABLE.weight.default * SIZE_TABLE.height.default)
+    .fill('')
+    .map((_, i) => ({ number: ++i, status: false }))
   return shuffleArray(ArrNumber)
 })()

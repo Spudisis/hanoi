@@ -15,8 +15,10 @@ const TableSchulte = () => {
         gridTemplateRows: `repeat(${height}, ${sizeCell})`
       }}
     >
-      {filledShuffledArray.map((elem) => (
-        <ItemTableObservered key={elem}>{elem}</ItemTableObservered>
+      {filledShuffledArray.map((elem, index) => (
+        <ItemTableObservered key={elem.number} status={elem.status} index={index}>
+          {elem.number}
+        </ItemTableObservered>
       ))}
     </div>
   )

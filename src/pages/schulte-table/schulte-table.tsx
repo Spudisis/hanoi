@@ -10,13 +10,19 @@ import { SchulteTableGame } from '@/shared/data/schute-table'
 import { SidebarSchulteMemo } from './ui/sidebar.tsx'
 
 const SchulteTable = () => {
-  const { reset } = SchulteTableGame
+  const { reset, eventNavigateByArrows } = SchulteTableGame
 
   useEffect(() => {
     document.title = 'Schulte table'
 
     changeIconSite('/five.svg')
-    return () => reset()
+
+    document.addEventListener('keydown', eventNavigateByArrows)
+
+    return () => {
+      reset()
+      document.removeEventListener('keydown', eventNavigateByArrows)
+    }
   }, [])
 
   return (
