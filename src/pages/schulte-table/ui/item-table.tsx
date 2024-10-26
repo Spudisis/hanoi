@@ -40,7 +40,7 @@ const ItemTable = ({ children, index, status }: ItemTableProps) => {
           'border bg-white outline-none transition box-border font-bold text-2xl border-gray-500 flex h-full w-full justify-center items-center',
           { 'bg-green-500': status && isMarkAnswers },
           error ? 'animate-error-pulse' : !status || !isMarkAnswers ? 'hover:bg-green-200' : '',
-          { 'border-amber-500 border-4': activeItem === index }
+          { 'border-blue-800 border-4': activeItem === index }
         )
       )}
     >
