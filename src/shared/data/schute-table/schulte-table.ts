@@ -182,6 +182,10 @@ class SchulteTable {
     this.isUltraHardMode = b ?? !this.isUltraHardMode
   }
 
+  randomizeShuffleCurrentArray() {
+    this.shuffledArray = shuffleArray(this.shuffledArray)
+  }
+
   selectNumber(b: number, index: number) {
     if (!this.isPrecessingGaming) {
       this.startGame()
@@ -195,16 +199,12 @@ class SchulteTable {
         this.endGame()
         this.changeStatusWinGame()
       } else if (this.isHardMode && !this.isUltraHardMode) {
-        this.shuffleArray()
+        this.randomizeShuffleCurrentArray()
       }
       return true
     }
     this.countErrors = this.countErrors + 1
     return false
-  }
-
-  randomizeShuffleCurrentArray() {
-    this.shuffledArray = shuffleArray(this.shuffledArray)
   }
 
   startGame() {
@@ -228,6 +228,7 @@ class SchulteTable {
     this.statusWin = true
     this.clearIntervalTime()
     this.clearIntervalUltraMode()
+    this.focusItem = null
   }
 
   clearIntervalTime() {
