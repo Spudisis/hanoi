@@ -1,8 +1,5 @@
 import { memo } from 'react'
 
-import { CurrentNumberObservered } from '@/widgets/settings-schulte/ui/current-number.tsx'
-import { TimerObservered } from '@/widgets/settings-schulte/ui/timer.tsx'
-
 import { ChangeDelayUltraModeSchulteObservered } from '@/features/change-delay-ultra-mode-schulte'
 import { ChangeSizeTableSchulteObservered } from '@/features/change-size-table-schulte'
 import { ResetGameSchulteObservered } from '@/features/reset-game-schulte'
@@ -13,11 +10,15 @@ import { ToggleHardModeUltraSchulteObservered } from '@/features/toggle-hard-mod
 import { ToggleMarkAnswersSchulteObservered } from '@/features/toggle-mark-answers-schulte'
 import { ToggleReverseModeSchulteObservered } from '@/features/toggle-reverse-mode-schulte'
 
+import { AboutGameObservered } from './ui/about-game.tsx'
 import { CountErrorsObservered } from './ui/count-errors.tsx'
+import { CurrentNumberObservered } from './ui/current-number.tsx'
+import { TimerObservered } from './ui/timer.tsx'
 
 const SettingsSchulte = () => {
   return (
     <div className='flex flex-col gap-3'>
+      <AboutGameObservered />
       <TimerObservered />
       <CountErrorsObservered />
       <CurrentNumberObservered />
