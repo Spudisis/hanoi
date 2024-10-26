@@ -166,7 +166,7 @@ class SchulteTable {
     const status = b ?? !this.isReverseMode
     this.isReverseMode = status
     if (status) {
-      this.lastCorrectNumber = this.sizeArr
+      this.lastCorrectNumber = this.sizeArr + 1
     } else {
       this.lastCorrectNumber = 0
     }
@@ -188,10 +188,10 @@ class SchulteTable {
     }
     this.setActiveFocus(index)
 
-    if (this.lastCorrectNumber + 1 === b) {
+    if (this.isReverseMode ? this.lastCorrectNumber - 1 === b : this.lastCorrectNumber + 1 === b) {
       this.lastCorrectNumber = b
       this.shuffledArray[index].status = true
-      if (this.sizeArr === b) {
+      if (this.isReverseMode ? 1 === b : this.sizeArr === b) {
         this.endGame()
         this.changeStatusWinGame()
       } else if (this.isHardMode && !this.isUltraHardMode) {
@@ -203,13 +203,17 @@ class SchulteTable {
     return false
   }
 
+  randomizeShuffleCurrentArray() {
+    this.shuffledArray = shuffleArray(this.shuffledArray)
+  }
+
   startGame() {
     this.isPrecessingGaming = true
     const started = new Date().getTime()
     this.focusItem = { col: 0, row: 0 }
     if (this.isUltraHardMode) {
       this.timerUltraMode = setInterval(() => {
-        this.shuffleArray()
+        this.randomizeShuffleCurrentArray()
       }, this.delayShuffleUltraMode)
     }
 
@@ -249,11 +253,15 @@ class SchulteTable {
     this.statusModalWin = b ?? !this.statusModalWin
   }
 
+  private resetLastCorrectNumber() {
+    this.lastCorrectNumber = this.isReverseMode ? this.sizeArr + 1 : 0
+  }
+
   reset() {
     this.weight = 3
     this.height = 3
     this.isBindValues = true
-    this.lastCorrectNumber = 0
+    this.resetLastCorrectNumber()
     this.countErrors = 0
     this.isPrecessingGaming = false
     this.gameTime = 0
@@ -268,7 +276,7 @@ class SchulteTable {
   }
 
   resetGame() {
-    this.lastCorrectNumber = 0
+    this.resetLastCorrectNumber()
     this.countErrors = 0
     this.isPrecessingGaming = false
     this.gameTime = 0

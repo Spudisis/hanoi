@@ -11,7 +11,7 @@ export const MainLayout = () => {
           <Outlet />
         </div>
       </main>
-      <footer className='border border-black'>footer</footer>
+      {/*<footer className='border border-black'>footer</footer>*/}
     </div>
   )
 }
