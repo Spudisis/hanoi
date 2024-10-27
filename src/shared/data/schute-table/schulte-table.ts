@@ -31,7 +31,7 @@ class SchulteTable {
   statusModalWin = false
   statusWin = false
 
-  isMarkAnswers = true
+  isMarkAnswers = false
 
   shuffledArray: { number: number; status: boolean }[] = INIT_TABLE
 
@@ -281,7 +281,7 @@ class SchulteTable {
     this.gameTime = 0
     this.statusModalWin = false
     this.statusWin = false
-    this.isMarkAnswers = true
+    this.isMarkAnswers = false
     this.toggleHardGame(false)
     this.clearIntervalTime()
     this.clearIntervalUltraMode()
