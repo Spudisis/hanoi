@@ -11,7 +11,7 @@ type ItemTableProps = { children: number; status: boolean; index: number }
 const ItemTable = ({ children, index, status }: ItemTableProps) => {
   const buttonRef = useRef<HTMLButtonElement>(null)
 
-  const { selectNumber, isMarkAnswers, activeItem } = SchulteTableGame
+  const { selectNumber, isMarkAnswers, activeItem, calcPosActiveItem } = SchulteTableGame
   const [error, setError] = useState(false)
   const handleClick = (b: number) => {
     const res = selectNumber(b, index)
@@ -20,12 +20,14 @@ const ItemTable = ({ children, index, status }: ItemTableProps) => {
       setTimeout(() => setError(false), 1000)
     }
   }
+  const pos = calcPosActiveItem(index)
+  const isActiveNavigation = activeItem?.col === pos.col && activeItem.row === pos.row
 
   useEffect(() => {
-    if (activeItem === index) {
+    if (isActiveNavigation) {
       buttonRef.current?.focus()
     }
-  }, [activeItem, index])
+  }, [isActiveNavigation])
 
   return (
     <button
@@ -40,7 +42,7 @@ const ItemTable = ({ children, index, status }: ItemTableProps) => {
           'border bg-white outline-none transition box-border font-bold text-2xl border-gray-500 flex h-full w-full justify-center items-center',
           { 'bg-green-500': status && isMarkAnswers },
           error ? 'animate-error-pulse' : !status || !isMarkAnswers ? 'hover:bg-green-200' : '',
-          { 'border-blue-800 border-4': activeItem === index }
+          { 'border-blue-800 border-4': isActiveNavigation }
         )
       )}
     >

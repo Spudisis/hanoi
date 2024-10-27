@@ -51,9 +51,16 @@ class SchulteTable {
 
   get activeItem() {
     if (this.focusItem) {
-      return this.focusItem.col + this.height * this.focusItem.row
+      return this.focusItem
     }
     return null
+  }
+
+  calcPosActiveItem(index: number) {
+    const col = index % this.weight
+    const row = Math.floor(index / this.weight)
+
+    return { col, row }
   }
 
   get time() {
