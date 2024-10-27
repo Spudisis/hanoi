@@ -11,7 +11,7 @@ type ItemTableProps = { children: number; status: boolean; index: number }
 const ItemTable = ({ children, index, status }: ItemTableProps) => {
   const buttonRef = useRef<HTMLButtonElement>(null)
 
-  const { selectNumber, isMarkAnswers, activeItem, calcPosActiveItem } = SchulteTableGame
+  const { selectNumber, isMarkAnswers, checkIsActiveItemPos } = SchulteTableGame
   const [error, setError] = useState(false)
   const handleClick = (b: number) => {
     const res = selectNumber(b, index)
@@ -20,8 +20,7 @@ const ItemTable = ({ children, index, status }: ItemTableProps) => {
       setTimeout(() => setError(false), 1000)
     }
   }
-  const pos = calcPosActiveItem(index)
-  const isActiveNavigation = activeItem?.col === pos.col && activeItem.row === pos.row
+  const isActiveNavigation = checkIsActiveItemPos(index)
 
   useEffect(() => {
     if (isActiveNavigation) {

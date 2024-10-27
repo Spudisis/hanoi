@@ -56,11 +56,12 @@ class SchulteTable {
     return null
   }
 
-  calcPosActiveItem(index: number) {
+  checkIsActiveItemPos(index: number) {
     const col = index % this.weight
     const row = Math.floor(index / this.weight)
+    const pos = { col, row }
 
-    return { col, row }
+    return this.activeItem?.col === pos.col && this.activeItem.row === pos.row
   }
 
   get time() {
