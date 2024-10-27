@@ -11,7 +11,7 @@ type ItemTableProps = { children: number; status: boolean; index: number }
 const ItemTable = ({ children, index, status }: ItemTableProps) => {
   const buttonRef = useRef<HTMLButtonElement>(null)
 
-  const { selectNumber, isMarkAnswers, checkIsActiveItemPos } = SchulteTableGame
+  const { selectNumber, isMarkAnswers, isPrecessingGaming, checkIsActiveItemPos } = SchulteTableGame
   const [error, setError] = useState(false)
   const handleClick = (b: number) => {
     const res = selectNumber(b, index)
@@ -34,7 +34,7 @@ const ItemTable = ({ children, index, status }: ItemTableProps) => {
       ref={buttonRef}
       data-item='number-schulte'
       data-index={index}
-      disabled={status && isMarkAnswers}
+      disabled={isPrecessingGaming ? status && isMarkAnswers : status}
       onClick={() => handleClick(children)}
       className={twMerge(
         clsx(
